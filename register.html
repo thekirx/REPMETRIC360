@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account - RepMetric / 360</title>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<!-- Registration page -->
+<body class="auth-page">
+
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <a href="index.html" class="navbar-brand-link">
+          <span class="material-symbols-outlined">fluid_med</span>
+          <span class="brand-name">RepMetric / 360</span>
+        </a>
+      </div>
+      
+      <nav class="navbar-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="schedule.html" class="nav-link">My Schedule</a>
+        <a href="support.html" class="nav-link">Support</a>
+      </nav>
+      
+      <div class="navbar-actions">
+        <a href="login.html" class="login-link">Login</a>
+        <a href="register.html" class="register-button active">Register</a>
+      </div>
+      
+      <button class="hamburger" aria-label="Toggle navigation menu">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+    
+    <div class="mobile-menu">
+      <a href="index.html" class="mobile-link">Home</a>
+      <a href="dashboard.html" class="mobile-link">Dashboard</a>
+      <a href="schedule.html" class="mobile-link">My Schedule</a>
+      <a href="support.html" class="mobile-link">Support</a>
+      <div class="mobile-actions">
+        <a href="login.html" class="mobile-login">Login</a>
+        <a href="register.html" class="mobile-register active">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="auth-container">
+    <div class="auth-card">
+      <!-- copied from login para consistent -->
+      <h1>Create New Account</h1>
+      
+      <!-- Registration form -->
+      <form class="auth-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="first-name">First Name <span class="required">*</span></label>
+            <input type="text" id="first-name" placeholder="Enter first name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="last-name">Last Name <span class="required">*</span></label>
+            <input type="text" id="last-name" placeholder="Enter last name" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address <span class="required">*</span></label>
+          <input type="email" id="email" placeholder="Enter your email" required>
+        </div>
+
+        <!-- Password field -->
+        <div class="form-group">
+          <label for="password">Password <span class="required">*</span></label>
+          <div class="password-input">
+            <input type="password" id="password" placeholder="Enter password" required>
+            <button type="button" class="password-toggle">
+              <span class="material-symbols-outlined">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Confirm password -->
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password <span class="required">*</span></label>
+          <div class="password-input">
+            <input type="password" id="confirm-password" placeholder="Confirm password" required>
+            <button type="button" class="password-toggle">
+              <span class="material-symbols-outlined">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-block">Register</button>
+      </form>
+
+      <div class="auth-footer">
+        <p>May account na? <a href="login.html">Login here</a></p>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

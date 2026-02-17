@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support Center - RepMetric / 360</title>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<!-- Support page - FAQ at contact info-->
+<body>
+
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <a href="index.html" class="navbar-brand-link">
+          <span class="material-symbols-outlined">fluid_med</span>
+          <span class="brand-name">RepMetric / 360</span>
+        </a>
+      </div>
+      
+      <nav class="navbar-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="schedule.html" class="nav-link">My Schedule</a>
+        <a href="support.html" class="nav-link active">Support</a>
+      </nav>
+      
+      <div class="navbar-actions">
+        <a href="login.html" class="login-link">Login</a>
+        <a href="register.html" class="register-button">Register</a>
+      </div>
+      
+      <button class="hamburger" aria-label="Toggle navigation menu">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+    
+    <div class="mobile-menu">
+      <a href="index.html" class="mobile-link">Home</a>
+      <a href="dashboard.html" class="mobile-link">Dashboard</a>
+      <a href="schedule.html" class="mobile-link">My Schedule</a>
+      <a href="support.html" class="mobile-link active">Support</a>
+      <div class="mobile-actions">
+        <a href="login.html" class="mobile-login">Login</a>
+        <a href="register.html" class="mobile-register">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-container">
+    <div class="page-header">
+      <h1>Support Center</h1>
+      <p>Help and contact information</p>
+    </div>
+
+    <!-- FAQ Section -->
+    
+    <section class="support-section">
+      <h2>Frequently Asked Questions</h2>
+      
+      <div class="faq-list">
+        <!-- FAQ 1 -->
+        <div class="faq-item">
+          <h3>Paano mag-log ng doctor visit?</h3>
+          <p>Punta ka sa Dashboard at gamitin yung "Daily Activity Logger" form. Piliin yung "Doctor Visit" sa dropdown, lagay mo yung details, then click "Log Activity".</p>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item">
+          <h3>Bakit di gumagana yung location?</h3>
+          <p>Make sure na naka-enable yung location permissions sa browser mo. Baka kailangan mo i-refresh yung page. Kung ayaw pa rin, try mo gamitin yung "Get Location" button sa form.</p>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item">
+          <h3>Paano mag-reset ng password?</h3>
+          <p>Contact mo yung system admin o IT support ninyo. Sila lang ang pwede mag-reset ng password. Para sa security, kailangan talaga ng authorization.</p>
+        </div>
+
+        <!-- FAQ 4 -->
+        <!-- TODO: Add more FAQs based sa feedback ng users -->
+        <div class="faq-item">
+          <h3>Pwede ba offline?</h3>
+          <p>Sa ngayon, kailangan ng internet connection para sa real-time sync. Pwede mo naman i-prepare yung logs mo offline tapos i-submit na lang pag may internet na.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    
+    <section class="support-section">
+      <h2>Contact Support</h2>
+      
+      <div class="support-grid">
+        <div class="support-card">
+          <div class="support-icon">
+            <span class="material-symbols-outlined">phone</span>
+          </div>
+          <h3>Phone Support</h3>
+          <p>(02) 8123-4567</p>
+          <p class="support-hours">Mon-Fri, 8AM-6PM</p>
+        </div>
+
+        <div class="support-card">
+          <div class="support-icon">
+            <span class="material-symbols-outlined">email</span>
+          </div>
+          <h3>Email Support</h3>
+          <p>support@repmetric360.ph</p>
+          <p class="support-hours">Sagot within 24 hours</p>
+        </div>
+
+        <div class="support-card">
+          <div class="support-icon">
+            <span class="material-symbols-outlined">chat</span>
+          </div>
+          <h3>Live Chat</h3>
+          <p>Nasa dashboard</p>
+          <p class="support-hours">Mon-Fri, 9AM-5PM</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section class="support-section">
+      <h2>Training Resources</h2>
+      
+      <div class="resources-grid">
+        <div class="resource-card card">
+          <h3>User Manual</h3>
+          <p>Complete guide sa lahat ng features</p>
+          <!-- Walang actual PDF, placeholder lang -->
+          <button class="btn">Download PDF</button>
+        </div>
+
+        <div class="resource-card card">
+          <h3>Video Tutorials</h3>
+          <p>Step-by-step guide sa mga features</p>
+          <button class="btn">Watch Videos</button>
+        </div>
+
+        <div class="resource-card card">
+          <h3>Quick Reference</h3>
+          <p>Cheat sheet para sa common tasks</p>
+          <button class="btn">View Guide</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quota Management - RepMetric / 360</title>
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<!-- Quotas page -->
+<body>
+
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <a href="index.html" class="navbar-brand-link">
+          <span class="material-symbols-outlined">fluid_med</span>
+          <span class="brand-name">RepMetric / 360</span>
+        </a>
+      </div>
+      
+      <nav class="navbar-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="schedule.html" class="nav-link">My Schedule</a>
+        <a href="support.html" class="nav-link">Support</a>
+      </nav>
+      
+      <div class="navbar-actions">
+        <a href="login.html" class="login-link">Login</a>
+        <a href="register.html" class="register-button">Register</a>
+      </div>
+      
+      <button class="hamburger" aria-label="Toggle navigation menu">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+    
+    <div class="mobile-menu">
+      <a href="index.html" class="mobile-link">Home</a>
+      <a href="dashboard.html" class="mobile-link">Dashboard</a>
+      <a href="schedule.html" class="mobile-link">My Schedule</a>
+      <a href="support.html" class="mobile-link">Support</a>
+      <div class="mobile-actions">
+        <a href="login.html" class="mobile-login">Login</a>
+        <a href="register.html" class="mobile-register">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-container">
+    <div class="page-header">
+      <!-- pwede rin gawing targets -->
+      <h1>Quota Management</h1>
+      <p>Track your sales targets and performance</p>
+    </div>
+
+    <!-- Summary Cards -->
+    <!-- FIXME: Hardcoded data muna, coconnect pa lang -->
+    <div class="quota-summary">
+      <div class="summary-card card">
+        <div class="summary-icon">
+          <span class="material-symbols-outlined">calendar_month</span>
+        </div>
+        <div class="summary-info">
+          <h3>Monthly Target</h3>
+          <div class="summary-number">85%</div>
+          <p>On track to meet goals</p>
+        </div>
+      </div>
+
+      <div class="summary-card card">
+        <div class="summary-icon success">
+          <span class="material-symbols-outlined">check_circle</span>
+        </div>
+        <div class="summary-info">
+          <h3>Completed</h3>
+          <div class="summary-number success">42</div>
+          <p>Activities this month</p>
+        </div>
+      </div>
+
+      <div class="summary-card card">
+        <div class="summary-icon warning">
+          <span class="material-symbols-outlined">pending</span>
+        </div>
+        <div class="summary-info">
+          <h3>Remaining</h3>
+          <div class="summary-number warning">8</div>
+          <p>To reach monthly target</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quotas-grid">
+      <div class="quotas-progress">
+        <!-- Progress tracking card -->
+        <div class="card">
+          <h2>Activity Quotas</h2>
+          <p class="card-subtitle">Progress sa monthly targets</p>
+
+          <!-- Quota 1 - Doctor visits -->
+          <div class="quota-item">
+            <div class="quota-header">
+              <div class="quota-info">
+                <span class="material-symbols-outlined">medical_services</span>
+                <span>Doctor Visits</span>
+              </div>
+              <span class="quota-count">18 / 25</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill medium" style="width: 72%"></div>
+            </div>
+            <div class="quota-footer">
+              <span>72% Complete</span>
+              <span>7 na lang</span>
+            </div>
+          </div>
+
+          <!-- Quota 2 - Pharmacy calls -->
+          <div class="quota-item">
+            <div class="quota-header">
+              <div class="quota-info">
+                <span class="material-symbols-outlined">local_pharmacy</span>
+                <span>Pharmacy Calls</span>
+              </div>
+              <span class="quota-count">12 / 15</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill high" style="width: 80%"></div>
+            </div>
+            <div class="quota-footer">
+              <span>80% Complete</span>
+              <span>3 na lang</span>
+            </div>
+          </div>
+
+          <!-- Quota 3 - Sample distribution -->
+          <div class="quota-item">
+            <div class="quota-header">
+              <div class="quota-info">
+                <span class="material-symbols-outlined">medication</span>
+                <span>Sample Distribution</span>
+              </div>
+              <span class="quota-count">45 / 50</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill high" style="width: 90%"></div>
+            </div>
+            <div class="quota-footer">
+              <span>90% Complete</span>
+              <span>5 na lang</span>
+            </div>
+          </div>
+
+          <!-- Quota 4 - Meetings -->
+          <!-- pwede natin to tangalin para mas basic layout tignnan na lang antin  -->
+          <div class="quota-item">
+            <div class="quota-header">
+              <div class="quota-info">
+                <span class="material-symbols-outlined">groups</span>
+                <span>Meetings</span>
+              </div>
+              <span class="quota-count">8 / 10</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill medium" style="width: 80%"></div>
+            </div>
+            <div class="quota-footer">
+              <span>80% Complete</span>
+              <span>2 na lang</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Side Panel -->
+      <div class="quotas-sidebar">
+        <div class="card">
+          <h2>Performance Insights</h2>
+          <div class="insight-list">
+            <div class="insight-item">
+              <span class="material-symbols-outlined">trending_up</span>
+              <div>
+                <h4>Top Performer</h4>
+                <p>Nasa top 15% ka ng field reps</p>
+              </div>
+            </div>
+
+            <div class="insight-item">
+              <span class="material-symbols-outlined">schedule</span>
+              <div>
+                <h4>On Schedule</h4>
+                <p>2 days ahead ka sa target</p>
+              </div>
+            </div>
+
+            <div class="insight-item">
+              <span class="material-symbols-outlined">star</span>
+              <div>
+                <h4>Quality Score</h4>
+                <p>4.8/5.0 average rating</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monthly goals checklist -->
+        <div class="card">
+          <h2>Monthly Goals</h2>
+          <div class="goals-list">
+            <!-- lagyan ng checkmark Yung completed goals -->
+            <div class="goal-item completed">
+              <span class="material-symbols-outlined">check_circle</span>
+              <span>Complete 20 doctor visits</span>
+            </div>
+            <div class="goal-item completed">
+              <span class="material-symbols-outlined">check_circle</span>
+              <span>Submit weekly reports on time</span>
+            </div>
+            <div class="goal-item pending">
+              <span class="material-symbols-outlined">radio_button_unchecked</span>
+              <span>Distribute 50 product samples</span>
+            </div>
+            <div class="goal-item pending">
+              <span class="material-symbols-outlined">radio_button_unchecked</span>
+              <span>Attend 3 training sessions</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
