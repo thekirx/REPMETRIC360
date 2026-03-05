@@ -33,8 +33,7 @@
       </nav>
       
       <div class="navbar-actions">
-        <a href="login.html" class="login-link">Login</a>
-        <a href="register.html" class="register-button">Register</a>
+        <button id="logoutBtn" class="btn btn-secondary">Logout</button>
       </div>
       
       <button class="hamburger" aria-label="Toggle navigation menu">
@@ -50,8 +49,7 @@
       <a href="schedule.html" class="mobile-link active">My Schedule</a>
       <a href="support.html" class="mobile-link">Support</a>
       <div class="mobile-actions">
-        <a href="login.html" class="mobile-login">Login</a>
-        <a href="register.html" class="mobile-register">Register</a>
+        <button id="logoutBtnMobile" class="btn btn-secondary">Logout</button>
       </div>
     </div>
   </header>
@@ -175,5 +173,21 @@
     </div>
   </main>
 
+  <script type="module">
+    import { requireAuth, logout } from "/js/auth.js";
+
+    await requireAuth();
+
+    const logoutBtn = document.querySelector("#logoutBtn");
+    const logoutBtnMobile = document.querySelector("#logoutBtnMobile");
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", logout);
+    }
+    if (logoutBtnMobile) {
+      logoutBtnMobile.addEventListener("click", logout);
+    }
+  </script>
+  <script type="module" src="/js/schedule.js"></script>
 </body>
 </html>
