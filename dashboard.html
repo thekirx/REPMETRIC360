@@ -209,17 +209,21 @@
   <script type="module">
     import { requireAuth, logout } from "/js/auth.js";
 
-    await requireAuth();
+    async function initAuth() {
+      await requireAuth();
 
-    const logoutBtn = document.querySelector("#logoutBtn");
-    const logoutBtnMobile = document.querySelector("#logoutBtnMobile");
+      const logoutBtn = document.querySelector("#logoutBtn");
+      const logoutBtnMobile = document.querySelector("#logoutBtnMobile");
 
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", logout);
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", logout);
+      }
+      if (logoutBtnMobile) {
+        logoutBtnMobile.addEventListener("click", logout);
+      }
     }
-    if (logoutBtnMobile) {
-      logoutBtnMobile.addEventListener("click", logout);
-    }
+
+    initAuth();
   </script>
 </body>
 </html>
