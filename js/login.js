@@ -1,6 +1,23 @@
 // Login form handler
 import { supabase } from "./supabaseClient.js";
 
+// Toggle password visibility
+const toggleBtn = document.querySelector(".password-toggle");
+const passwordInput = document.querySelector("#password");
+
+if (toggleBtn && passwordInput) {
+  toggleBtn.addEventListener("click", () => {
+    const type = passwordInput.type === "password" ? "text" : "password";
+    passwordInput.type = type;
+    
+    // Palitan ang icon
+    const icon = toggleBtn.querySelector("span");
+    if (icon) {
+      icon.textContent = type === "password" ? "visibility" : "visibility_off";
+    }
+  });
+}
+
 document.querySelector("#loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 

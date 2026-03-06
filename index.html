@@ -112,5 +112,33 @@
     </div>
   </section>
 
+  <script type="module">
+    import { getSession, logout } from "/js/auth.js";
+
+    async function updateNavbar() {
+      const session = await getSession();
+      
+      const desktopActions = document.querySelector(".navbar-actions");
+      const mobileActions = document.querySelector(".mobile-actions");
+      
+      if (session) {
+        // User is logged in - show logout button
+        const logoutBtnHTML = `<button id="logoutBtn" class="btn btn-secondary">Logout</button>`;
+        
+        if (desktopActions) {
+          desktopActions.innerHTML = logoutBtnHTML;
+          desktopActions.querySelector("#logoutBtn").addEventListener("click", logout);
+        }
+        
+        if (mobileActions) {
+          mobileActions.innerHTML = logoutBtnHTML;
+          mobileActions.querySelector("#logoutBtn").addEventListener("click", logout);
+        }
+      }
+      // If not logged in, keep the default Login/Register links
+    }
+
+    updateNavbar();
+  </script>
 </body>
 </html>
