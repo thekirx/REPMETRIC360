@@ -91,6 +91,15 @@
           </div>
         </div>
 
+        <!-- Role selection - hidden by default, show via URL param for admin creation -->
+        <div class="form-group" id="roleGroup" style="display: none;">
+          <label for="role">Account Type</label>
+          <select id="role">
+            <option value="repmeds">Medical Representative</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
         <button type="submit" class="btn btn-block">Register</button>
       </form>
 
@@ -101,5 +110,13 @@
   </main>
 
   <script type="module" src="/js/register.js"></script>
+  <script>
+    // Show role selector kung may ?admin=true sa URL
+    // Para makagawa ng admin accounts
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('admin') === 'true') {
+      document.getElementById('roleGroup').style.display = 'block';
+    }
+  </script>
 </body>
 </html>

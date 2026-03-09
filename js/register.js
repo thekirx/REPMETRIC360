@@ -26,13 +26,17 @@ document.querySelector("#registerForm").addEventListener("submit", async (e) => 
   const fullName = document.querySelector("#fullName").value;
   const email = document.querySelector("#email").value;
   const password = document.querySelector("#password").value;
+  
+  // Kunin ang role (default: repmeds)
+  const role = document.querySelector("#role")?.value || "repmeds";
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
-        full_name: fullName
+        full_name: fullName,
+        role: role
       }
     }
   });
@@ -40,6 +44,24 @@ document.querySelector("#registerForm").addEventListener("submit", async (e) => 
   if (error) {
     alert(error.message);
     return;
+  }
+
+  // Gumawa ng profile record pagkatapos mag-sign up
+  if (data.user) {
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .insert([
+        {
+          id: data.user.id,
+          full_name: fullName,
+          email: email,
+          role: role
+        }
+      ]);
+    
+    if (profileError) {
+      console.error("Error creating profile:", profileError);
+    }
   }
 
   alert("Account created! Check your email for confirmation.");

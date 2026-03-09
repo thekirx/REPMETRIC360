@@ -6,6 +6,35 @@ export async function getSession() {
   return data?.session ?? null;
 }
 
+export async function getUser() {
+  const { data } = await supabase.auth.getSession();
+  return data?.session?.user ?? null;
+}
+
+export async function getUserRole() {
+  const session = await getSession();
+  if (!session) return null;
+  
+  // Kunin ang role mula sa user metadata
+  const role = session.user.user_metadata?.role;
+  if (role) return role;
+  
+  // Fallback: kunin mula sa profiles table
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", session.user.id)
+    .single();
+  
+  if (error || !data) return "repmeds"; // Default role
+  return data.role;
+}
+
+export async function isAdmin() {
+  const role = await getUserRole();
+  return role === "admin";
+}
+
 export async function requireAuth() {
   const session = await getSession();
 
@@ -14,6 +43,20 @@ export async function requireAuth() {
     return null;
   }
 
+  return session;
+}
+
+export async function requireAdmin() {
+  const session = await requireAuth();
+  if (!session) return null;
+  
+  const role = await getUserRole();
+  if (role !== "admin") {
+    alert("Admin access only!");
+    window.location.href = "/dashboard.html";
+    return null;
+  }
+  
   return session;
 }
 

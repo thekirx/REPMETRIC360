@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - RepMetric / 360</title>
+  
+  <!-- google fonts icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <!-- css file natin -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<!--
+  Admin Dashboard - para lang to sa admin users
+  Dito nakikita ni admin lahat ng data ng repmeds
+-->
+<body>
+
+  <!-- header navigation -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <a href="index.html" class="navbar-brand-link">
+          <span class="material-symbols-outlined">fluid_med</span>
+          <span class="brand-name">RepMetric / 360</span>
+        </a>
+      </div>
+      
+      <nav class="navbar-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="admin.html" class="nav-link active">Admin</a>
+        <a href="reports.html" class="nav-link">Reports</a>
+        <a href="support.html" class="nav-link">Support</a>
+      </nav>
+      
+      <div class="navbar-actions">
+        <span id="adminBadge" class="admin-badge" style="display: none;">ADMIN</span>
+        <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+      </div>
+      
+      <button class="hamburger" aria-label="Toggle navigation menu">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+    
+    <div class="mobile-menu">
+      <a href="index.html" class="mobile-link">Home</a>
+      <a href="admin.html" class="mobile-link active">Admin</a>
+      <a href="reports.html" class="mobile-link">Reports</a>
+      <a href="support.html" class="mobile-link">Support</a>
+      <div class="mobile-actions">
+        <button id="logoutBtnMobile" class="btn btn-secondary">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-container">
+    <div class="page-header">
+      <h1>Admin Dashboard</h1>
+      <p>Monitor all field force activities and performance</p>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Left Column -->
+      <div class="dashboard-left">
+        <!-- All Users Activity Feed -->
+        <div class="card">
+          <h2>All Activities</h2>
+          <p class="card-subtitle">Real-time feed from all medical representatives</p>
+          <div class="activity-feed" id="allActivities">
+            <!-- Dito ilalagay ng JS ang activities -->
+            <div class="activity-item">
+              <span class="activity-time">08:30 AM</span>
+              <span class="activity-user">Juan Dela Cruz</span>
+              <span class="activity-type">Doctor Visit</span>
+              <span class="activity-detail">Dr. Santos - St. Luke's QC</span>
+            </div>
+            <div class="activity-item">
+              <span class="activity-time">09:15 AM</span>
+              <span class="activity-user">Maria Santos</span>
+              <span class="activity-type">Pharmacy Call</span>
+              <span class="activity-detail">Mercury Drug - Quezon Ave</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="dashboard-right">
+        <!-- Team Overview -->
+        <div class="card">
+          <h2>Team Overview</h2>
+          <div class="stat-grid">
+            <div class="stat-item">
+              <span class="stat-number" id="totalReps">0</span>
+              <span class="stat-label">Active Reps</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number" id="todayActivities">0</span>
+              <span class="stat-label">Today's Activities</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rep List -->
+        <div class="card">
+          <h2>Medical Representatives</h2>
+          <div class="rep-list" id="repList">
+            <!-- Dito ilalagay ng JS ang list ng reps -->
+            <p class="loading-text">Loading...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { requireAdmin, logout, getUserRole } from "/js/auth.js";
+    import { supabase } from "/js/supabaseClient.js";
+
+    async function initAdmin() {
+      // Check kung admin talaga
+      const session = await requireAdmin();
+      if (!session) return;
+
+      // Show admin badge
+      document.getElementById('adminBadge').style.display = 'inline-block';
+
+      // Setup logout buttons
+      const logoutBtn = document.querySelector("#logoutBtn");
+      const logoutBtnMobile = document.querySelector("#logoutBtnMobile");
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", logout);
+      }
+      if (logoutBtnMobile) {
+        logoutBtnMobile.addEventListener("click", logout);
+      }
+
+      // Load all reps
+      await loadReps();
+      
+      // Load all activities
+      await loadAllActivities();
+    }
+
+    async function loadReps() {
+      // Kunin lahat ng repmeds users
+      const { data: reps, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('role', 'repmeds');
+
+      if (error) {
+        console.error('Error loading reps:', error);
+        return;
+      }
+
+      // Update count
+      document.getElementById('totalReps').textContent = reps?.length || 0;
+
+      // Render rep list
+      const repListEl = document.getElementById('repList');
+      if (reps && reps.length > 0) {
+        repListEl.innerHTML = reps.map(rep => `
+          <div class="rep-item">
+            <span class="rep-name">${rep.full_name}</span>
+            <span class="rep-email">${rep.email}</span>
+          </div>
+        `).join('');
+      } else {
+        repListEl.innerHTML = '<p class="empty-text">No representatives found</p>';
+      }
+    }
+
+    async function loadAllActivities() {
+      // TODO: Implement based on your activities table
+      // Kunin lahat ng activities mula sa lahat ng users
+      // const { data: activities, error } = await supabase
+      //   .from('activities')
+      //   .select('*, profiles(full_name)')
+      //   .order('created_at', { ascending: false });
+      
+      // For now, placeholder lang
+      console.log('Loading all activities...');
+    }
+
+    initAdmin();
+  </script>
+</body>
+</html>

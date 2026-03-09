@@ -95,6 +95,90 @@ body {
   align-items: center;
 }
 
+/* admin badge sa navbar */
+.admin-badge {
+  background-color: #dc2626;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* stat grid para sa admin dashboard */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.stat-item {
+  background-color: #f0f9ff;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0d9488;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+/* rep list styles */
+.rep-list {
+  margin-top: 16px;
+}
+
+.rep-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.rep-item:last-child {
+  border-bottom: none;
+}
+
+.rep-name {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.rep-email {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.loading-text,
+.empty-text {
+  text-align: center;
+  color: #6b7280;
+  padding: 20px;
+}
+
+/* activity user name */
+.activity-user {
+  background-color: #0d9488;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-right: 8px;
+}
+
 /* login link  */
 .login-link {
   color: white;
