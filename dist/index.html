@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RepMetric / 360 </title>
+  
+  <!-- google fonts icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <!-- css file natin -->
+  <script type="module" crossorigin src="/assets/main-BtITydaM.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-D4v529L2.js">
+  <link rel="modulepreload" crossorigin href="/assets/auth-8WVZwt0Y.js">
+  <link rel="stylesheet" crossorigin href="/assets/styles-C2wZ_EGY.css">
+</head>
+<!-- 
+  NOTE: RepMetric / 360 - Capstone Project
+  4th Year IT - SY 2025-2026
+  TODO: Add backend integration sa login/register
+  FIXME: Hamburger menu minsan di gumagana sa mobile
+-->
+<body>
+
+  <!-- header navigation -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <a href="#" class="navbar-brand-link">
+          <span class="material-symbols-outlined">fluid_med</span>
+          <span class="brand-name">RepMetric / 360</span>
+        </a>
+      </div>
+      
+      <nav class="navbar-links">
+        <a href="index.html" class="nav-link active">Home</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="schedule.html" class="nav-link">My Schedule</a>
+        <a href="support.html" class="nav-link">Support</a>
+      </nav>
+      
+      <div class="navbar-actions">
+        <a href="login.html" class="login-link">Login</a>
+        <a href="register.html" class="register-button">Register</a>
+      </div>
+      
+      <button class="hamburger" aria-label="Toggle navigation menu">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+    
+    <div class="mobile-menu">
+      <a href="index.html" class="mobile-link active">Home</a>
+      <a href="dashboard.html" class="mobile-link">Dashboard</a>
+      <a href="schedule.html" class="mobile-link">My Schedule</a>
+      <a href="support.html" class="mobile-link">Support</a>
+      <div class="mobile-actions">
+        <a href="login.html" class="mobile-login">Login</a>
+        <a href="register.html" class="mobile-register">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- hero section - yung malaking banner sa taas -->
+  <!-- DEV NOTE: Dapat may 2 buttons dito (Dashboard at Learn More) pero tinanggal ko yung Learn More kasi wala pang content -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <!-- TODO: Palitan to pag may final tagline na kami ng group -->
+      <h1>RepMetric Dashboard - Field Force Monitoring</h1>
+      <p>System for field representatives to track visits, sales, and quotas.</p>
+      <div class="hero-buttons">
+        <a href="dashboard.html" class="btn-primary">Go to Dashboard</a>
+        <!-- 
+          <a href="#" class="btn-secondary">Learn More</a> 
+          Tinanggal ko muna to, baka sabihin ni sir bakit walang laman
+        -->
+      </div>
+    </div>
+  </section>
+
+  <!-- features section - yung mga cards sa baba -->
+  <section class="feature-highlights">
+    <div class="container">
+      <h2>System Features</h2>
+      <div class="features-grid">
+        <!-- instant reporting feature -->
+        <!-- Ito yung pinaka-importante sa system namin - yung pag-log ng doctor visits -->
+        <a href="reports.html" class="feature-card">
+          <div class="feature-icon clipboard">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 4H20C20.5304 4 21.0391 4.21071 21.4142 4.58579C21.7893 4.96086 22 5.46957 22 6V18C22 18.5304 21.7893 19.0391 21.4142 19.4142C21.0391 19.7893 20.5304 20 20 20H4C3.46957 20 2.96086 19.7893 2.58579 19.4142C2.21071 19.0391 2 18.5304 2 18V6C2 5.46957 2.21071 4.96086 2.58579 4.58579C2.96086 4.21071 3.46957 4 4 4H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="8" y="2" width="8" height="4" rx="1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Instant Reporting</h3>
+          <p>Submit daily reports and doctor feedback in seconds.</p>
+        </a>
+
+        <!-- quota management feature -->
+        <!-- Para to sa tracking ng sales targets - requirement ni sir na may progress tracking -->
+        <a href="quotas.html" class="feature-card">
+          <div class="feature-icon chart">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 20V10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M18 20V4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 20V16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Quota Management</h3>
+          <p>Track your sales targets and sample distribution.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

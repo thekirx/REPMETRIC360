@@ -212,11 +212,5 @@ function setupActivityForm(userId) {
   });
 }
 
-// Helper to get current user
-async function getUser() {
-  const { data } = await supabase.auth.getSession();
-  return data?.session?.user;
-}
-
 // Initialize when DOM is ready
 document.addEventListener("DOMContentLoaded", initDashboard);

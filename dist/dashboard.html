@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Field Force Dashboard - RepMetric / 360</title>
+  
+  <!-- google fonts icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <!-- css file natin -->
+  <script type="module" crossorigin src="/assets/dashboard-Cz6AKna3.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-D4v529L2.js">
+  <link rel="modulepreload" crossorigin href="/assets/auth-8WVZwt0Y.js">
+  <link rel="stylesheet" crossorigin href="/assets/styles-C2wZ_EGY.css">
+</head>
+<!-- 
+  Dashboard page - main feature ng system
+  TODO: Connect sa database para real-time yung data
+  NOTE: Yung activity feed dapat nag-aauto-refresh
+-->
+<body>
+
+  <!-- header navigation -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <a href="index.html" class="navbar-brand-link">
+          <span class="material-symbols-outlined">fluid_med</span>
+          <span class="brand-name">RepMetric / 360</span>
+        </a>
+      </div>
+      
+      <nav class="navbar-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="dashboard.html" class="nav-link active">Dashboard</a>
+        <a href="schedule.html" class="nav-link">My Schedule</a>
+        <a href="support.html" class="nav-link">Support</a>
+      </nav>
+      
+      <div class="navbar-actions">
+        <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+      </div>
+      
+      <button class="hamburger" aria-label="Toggle navigation menu">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+    
+    <div class="mobile-menu">
+      <a href="index.html" class="mobile-link">Home</a>
+      <a href="dashboard.html" class="mobile-link active">Dashboard</a>
+      <a href="schedule.html" class="mobile-link">My Schedule</a>
+      <a href="support.html" class="mobile-link">Support</a>
+      <div class="mobile-actions">
+        <button id="logoutBtnMobile" class="btn btn-secondary">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-container">
+    <div class="page-header">
+      <!-- DEV NOTE: Dapat "Dashboard" lang to pero sabi ni sir lagyan daw ng "Field Force" para professional daw tingnan -->
+      <h1>Field Force Dashboard</h1>
+      <p>Real-time activity tracking and progress reporting</p>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Left Column -->
+      <div class="dashboard-left">
+        <!-- Live Activity Feed -->
+        <!-- Pinaka-importante to - dito nakikita ni manager kung ano ginagawa ng rep -->
+        <div class="card">
+          <h2>Live Activity Feed</h2>
+          <div class="activity-feed">
+            <!-- FIXME: Dapat to dynamic from database, hardcoded muna para sa demo -->
+            <div class="activity-item">
+              <span class="activity-time">08:30 AM</span>
+              <span class="activity-type">Doctor Visit</span>
+              <span class="activity-detail">Dr. Santos - St. Luke's QC</span>
+            </div>
+            <div class="activity-item">
+              <span class="activity-time">10:15 AM</span>
+              <span class="activity-type">Pharmacy Call</span>
+              <span class="activity-detail">Mercury Drug - Quezon Ave</span>
+            </div>
+            <div class="activity-item">
+              <span class="activity-time">11:45 AM</span>
+              <span class="activity-type">Sample Distribution</span>
+              <span class="activity-detail">Biogesic samples - 20pcs</span>
+            </div>
+            <div class="activity-item">
+              <span class="activity-time">02:00 PM</span>
+              <span class="activity-type">Doctor Visit</span>
+              <span class="activity-detail">Dr. Reyes - Makati Med</span>
+            </div>
+            <div class="activity-item">
+              <span class="activity-time">04:30 PM</span>
+              <span class="activity-type">Pharmacy Call</span>
+              <span class="activity-detail">Watsons - SM North</span>
+            </div>
+          </div>
+          <div class="info-box success">
+            <strong>Real-time Sync:</strong> Management can see your live status updates instantly.
+          </div>
+        </div>
+
+        <!-- Activity Logger Form -->
+      
+        <div class="card">
+          <h2>Daily Activity Logger</h2>
+          <form class="activity-form">
+            <div class="form-group">
+              <label for="activity-type">Activity Type <span class="required">*</span></label>
+              <select id="activity-type" required>
+                <option value="">Select an activity</option>
+                <option value="doctor-visit">Doctor Visit</option>
+                <option value="pharmacy-call">Pharmacy Call</option>
+                <option value="sample-distribution">Sample Distribution</option>
+                <option value="meeting">Meeting</option>
+                <option value="training">Training Session</option>
+                <option value="other">Other Activity</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="activity-details">Details</label>
+              <textarea id="activity-details" rows="3" placeholder="Enter activity details..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="activity-location">Location</label>
+              <input type="text" id="activity-location" placeholder="Enter location">
+            </div>
+
+            <!-- DEV NOTE: Yung location button dapat nag-ge-get ng GPS coordinates -->
+            <div class="button-group">
+              <button type="button" class="btn-secondary location-button">
+                <span class="material-symbols-outlined">location_on</span>
+                Get Location
+              </button>
+              <button type="button" class="btn-secondary camera-button">
+                <span class="material-symbols-outlined">photo_camera</span>
+                Photo
+              </button>
+            </div>
+
+            <button type="submit" class="btn btn-block">Log Activity</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- right column -->
+      <!-- Dito yung progress at summary -->
+      <div class="dashboard-right">
+        <!-- progress reporting card -->
+        <!-- NOTE: Yung progress dapat nag-uupdate based sa logged activities -->
+        <div class="card">
+          <h2>Progress Reporting</h2>
+          <p class="card-subtitle">Track your targets and quotas</p>
+
+          <!-- TODO: Gawing dynamic to, hardcoded lang muna -->
+          <div class="progress-item">
+            <div class="progress-header">
+              <span>Doctor Visits</span>
+              <span class="progress-count">4/10</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill low" style="width: 40%"></div>
+            </div>
+            <span class="progress-percent">40%</span>
+          </div>
+
+          <div class="progress-item">
+            <div class="progress-header">
+              <span>Pharmacy Calls</span>
+              <span class="progress-count">8/15</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill medium" style="width: 53%"></div>
+            </div>
+            <span class="progress-percent">53%</span>
+          </div>
+
+          <div class="progress-item">
+            <div class="progress-header">
+              <span>Sample Distribution</span>
+              <span class="progress-count">12/20</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill medium" style="width: 60%"></div>
+            </div>
+            <span class="progress-percent">60%</span>
+          </div>
+        </div>
+
+        <!-- Performance Summary -->
+        <div class="card">
+          <h2>Performance Summary</h2>
+          <ul class="info-list">
+            <li>All activities are synced to management dashboard</li>
+            <li>Your progress updates automatically as you log activities</li>
+            <li>Management can view your status at any moment</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 // Reports.js - Live data from Supabase
 import { supabase } from "./supabaseClient.js";
-import { requireAuth } from "./auth.js";
+import { requireAuth, getUser } from "./auth.js";
 
 // DOM Elements
 const reportsTableBody = document.querySelector(".reports-table tbody");
@@ -126,12 +126,6 @@ async function createReport() {
 
   // Show form or navigate to create page
   alert("Create new report - Feature coming soon!");
-}
-
-// Helper to get current user
-async function getUser() {
-  const { data } = await supabase.auth.getSession();
-  return data?.session?.user;
 }
 
 // Make functions available globally for onclick handlers

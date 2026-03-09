@@ -1,6 +1,6 @@
 // Schedule.js - Live data from Supabase
 import { supabase } from "./supabaseClient.js";
-import { requireAuth } from "./auth.js";
+import { requireAuth, getUser } from "./auth.js";
 
 // DOM Elements
 const appointmentsListEl = document.querySelector(".appointment-list");
@@ -123,12 +123,6 @@ async function loadAppointments(userId, date) {
       </div>
     `;
   }).join("");
-}
-
-// Helper to get current user
-async function getUser() {
-  const { data } = await supabase.auth.getSession();
-  return data?.session?.user;
 }
 
 // Initialize when DOM is ready
