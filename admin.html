@@ -11,9 +11,10 @@
   <!-- css file natin -->
   <link rel="stylesheet" href="styles.css">
 </head>
-<!--
-  Admin Dashboard - para lang to sa admin users
-  Dito nakikita ni admin lahat ng data ng repmeds
+<!-- 
+  Admin Dashboard - Management command center
+  Admin-only access with role-based authorization
+  Real-time monitoring of field reps, visits, schedules, and performance
 -->
 <body>
 
@@ -29,13 +30,14 @@
       
       <nav class="navbar-links">
         <a href="index.html" class="nav-link">Home</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
         <a href="admin.html" class="nav-link active">Admin</a>
-        <a href="reports.html" class="nav-link">Reports</a>
+        <a href="schedule.html" class="nav-link">My Schedule</a>
         <a href="support.html" class="nav-link">Support</a>
       </nav>
       
       <div class="navbar-actions">
-        <span id="adminBadge" class="admin-badge" style="display: none;">ADMIN</span>
+        <span class="admin-badge">ADMIN</span>
         <button id="logoutBtn" class="btn btn-secondary">Logout</button>
       </div>
       
@@ -48,8 +50,9 @@
     
     <div class="mobile-menu">
       <a href="index.html" class="mobile-link">Home</a>
+      <a href="dashboard.html" class="mobile-link">Dashboard</a>
       <a href="admin.html" class="mobile-link active">Admin</a>
-      <a href="reports.html" class="mobile-link">Reports</a>
+      <a href="schedule.html" class="mobile-link">My Schedule</a>
       <a href="support.html" class="mobile-link">Support</a>
       <div class="mobile-actions">
         <button id="logoutBtnMobile" class="btn btn-secondary">Logout</button>
@@ -58,137 +61,330 @@
   </header>
 
   <main class="page-container">
-    <div class="page-header">
-      <h1>Admin Dashboard</h1>
-      <p>Monitor all field force activities and performance</p>
+    <div class="page-header with-action">
+      <div>
+        <h1>Admin Dashboard</h1>
+        <p>Field Force Management Command Center</p>
+      </div>
+      <div class="header-actions">
+        <span class="last-updated">Last updated: <span id="lastUpdated">Just now</span></span>
+      </div>
     </div>
 
-    <div class="dashboard-grid">
+    <!-- Summary Statistics Cards -->
+    <div class="admin-stats-grid">
+      <div class="stat-card card">
+        <div class="stat-icon">
+          <span class="material-symbols-outlined">groups</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number" id="totalReps">--</span>
+          <span class="stat-label">Total Field Reps</span>
+        </div>
+      </div>
+
+      <div class="stat-card card">
+        <div class="stat-icon success">
+          <span class="material-symbols-outlined">person_check</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number" id="activeReps">--</span>
+          <span class="stat-label">Active Today</span>
+        </div>
+      </div>
+
+      <div class="stat-card card">
+        <div class="stat-icon info">
+          <span class="material-symbols-outlined">local_hospital</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number" id="totalVisits">--</span>
+          <span class="stat-label">Visits Today</span>
+        </div>
+      </div>
+
+      <div class="stat-card card">
+        <div class="stat-icon success">
+          <span class="material-symbols-outlined">phone_enabled</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number" id="completedCalls">--</span>
+          <span class="stat-label">Completed Calls</span>
+        </div>
+      </div>
+
+      <div class="stat-card card">
+        <div class="stat-icon warning">
+          <span class="material-symbols-outlined">pending_actions</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number" id="pendingReports">--</span>
+          <span class="stat-label">Pending Reports</span>
+        </div>
+      </div>
+
+      <div class="stat-card card">
+        <div class="stat-icon">
+          <span class="material-symbols-outlined">trending_up</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number" id="quotaAchievement">--%</span>
+          <span class="stat-label">Monthly Quota</span>
+        </div>
+      </div>
+
+      <div class="stat-card card">
+        <div class="stat-icon info">
+          <span class="material-symbols-outlined">medication</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number" id="sampleDistribution">--</span>
+          <span class="stat-label">Samples Distributed</span>
+        </div>
+      </div>
+
+      <div class="stat-card card">
+        <div class="stat-icon">
+          <span class="material-symbols-outlined">event</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number" id="upcomingSchedules">--</span>
+          <span class="stat-label">Upcoming Schedules</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Admin Grid -->
+    <div class="admin-grid">
       <!-- Left Column -->
-      <div class="dashboard-left">
-        <!-- All Users Activity Feed -->
+      <div class="admin-left">
+        <!-- Representative Monitoring Panel -->
         <div class="card">
-          <h2>All Activities</h2>
-          <p class="card-subtitle">Real-time feed from all medical representatives</p>
-          <div class="activity-feed" id="allActivities">
-            <!-- Dito ilalagay ng JS ang activities -->
-            <div class="activity-item">
-              <span class="activity-time">08:30 AM</span>
-              <span class="activity-user">Juan Dela Cruz</span>
-              <span class="activity-type">Doctor Visit</span>
-              <span class="activity-detail">Dr. Santos - St. Luke's QC</span>
+          <div class="card-header">
+            <h2>Representative Monitoring</h2>
+            <div class="search-box">
+              <input type="text" id="repSearch" placeholder="Search reps...">
+              <span class="material-symbols-outlined">search</span>
             </div>
+          </div>
+          <div class="table-container">
+            <table class="reports-table rep-monitoring-table">
+              <thead>
+                <tr>
+                  <th>Representative</th>
+                  <th>Territory</th>
+                  <th>Status</th>
+                  <th>Visits Today</th>
+                  <th>Quota Progress</th>
+                  <th>Last Activity</th>
+                </tr>
+              </thead>
+              <tbody id="repMonitoringTable">
+                <tr>
+                  <td colspan="6" class="loading-text">Loading representatives...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Performance Analytics Section -->
+        <div class="card">
+          <h2>Performance Analytics</h2>
+          <div class="analytics-grid">
+            <div class="analytics-item">
+              <h4>Top Performers</h4>
+              <div class="top-performers-list" id="topPerformers">
+                <div class="loading-text">Loading...</div>
+              </div>
+            </div>
+            <div class="analytics-item">
+              <h4>Underperforming</h4>
+              <div class="underperformers-list" id="underperformers">
+                <div class="loading-text">Loading...</div>
+              </div>
+            </div>
+          </div>
+          <div class="analytics-summary">
+            <div class="analytics-metric">
+              <span class="metric-value" id="visitCompletionRate">--%</span>
+              <span class="metric-label">Visit Completion Rate</span>
+            </div>
+            <div class="analytics-metric">
+              <span class="metric-value" id="reportSubmissionTrend">--%</span>
+              <span class="metric-label">Report Submission Trend</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity / Reports Feed -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Recent Field Reports</h2>
+            <a href="reports.html" class="view-all-link">View All</a>
+          </div>
+          <div class="activity-feed admin-activity-feed" id="recentReportsFeed">
             <div class="activity-item">
-              <span class="activity-time">09:15 AM</span>
-              <span class="activity-user">Maria Santos</span>
-              <span class="activity-type">Pharmacy Call</span>
-              <span class="activity-detail">Mercury Drug - Quezon Ave</span>
+              <span class="activity-detail">Loading recent reports...</span>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Right Column -->
-      <div class="dashboard-right">
-        <!-- Team Overview -->
-        <div class="card">
-          <h2>Team Overview</h2>
-          <div class="stat-grid">
-            <div class="stat-item">
-              <span class="stat-number" id="totalReps">0</span>
-              <span class="stat-label">Active Reps</span>
+      <div class="admin-right">
+        <!-- Alerts / Notifications Panel -->
+        <div class="card alerts-card">
+          <h2>
+            <span class="material-symbols-outlined">notifications_active</span>
+            Alerts & Notifications
+          </h2>
+          <div class="alerts-list" id="alertsList">
+            <div class="alert-item alert-warning">
+              <span class="material-symbols-outlined">warning</span>
+              <div class="alert-content">
+                <strong>Missing Daily Reports</strong>
+                <span>3 reps haven't submitted reports</span>
+              </div>
             </div>
-            <div class="stat-item">
-              <span class="stat-number" id="todayActivities">0</span>
-              <span class="stat-label">Today's Activities</span>
+            <div class="alert-item alert-info">
+              <span class="material-symbols-outlined">schedule</span>
+              <div class="alert-content">
+                <strong>Schedule Conflicts</strong>
+                <span>2 overlapping appointments detected</span>
+              </div>
+            </div>
+            <div class="alert-item alert-success">
+              <span class="material-symbols-outlined">check_circle</span>
+              <div class="alert-content">
+                <strong>Quota Milestone</strong>
+                <span>Team reached 75% monthly target</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Rep List -->
+        <!-- Scheduling Overview -->
         <div class="card">
-          <h2>Medical Representatives</h2>
-          <div class="rep-list" id="repList">
-            <!-- Dito ilalagay ng JS ang list ng reps -->
-            <p class="loading-text">Loading...</p>
+          <h2>Today's Schedule Overview</h2>
+          <div class="schedule-stats">
+            <div class="schedule-stat">
+              <span class="stat-value" id="todayAppointments">--</span>
+              <span class="stat-label">Appointments</span>
+            </div>
+            <div class="schedule-stat">
+              <span class="stat-value" id="missedAppointments">--</span>
+              <span class="stat-label">Missed</span>
+            </div>
+            <div class="schedule-stat">
+              <span class="stat-value" id="completedAppointments">--</span>
+              <span class="stat-label">Completed</span>
+            </div>
+          </div>
+          <div class="upcoming-schedules" id="upcomingSchedulesList">
+            <h4>Upcoming Today</h4>
+            <div class="schedule-item">
+              <span class="schedule-time">02:00 PM</span>
+              <span class="schedule-rep">Juan Dela Cruz</span>
+              <span class="schedule-detail">Dr. Reyes - Makati Med</span>
+            </div>
+            <div class="schedule-item">
+              <span class="schedule-time">04:30 PM</span>
+              <span class="schedule-rep">Maria Santos</span>
+              <span class="schedule-detail">Watsons - SM North</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quota and Target Management -->
+        <div class="card">
+          <h2>Quota Tracking</h2>
+          <div class="quota-tracking-list" id="quotaTrackingList">
+            <div class="quota-track-item">
+              <div class="quota-track-header">
+                <span class="quota-rep-name">Team Average</span>
+                <span class="quota-percentage">78%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill medium" style="width: 78%"></div>
+              </div>
+            </div>
+            <div class="quota-track-item">
+              <div class="quota-track-header">
+                <span class="quota-rep-name">Doctor Visits Target</span>
+                <span class="quota-percentage">85%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill high" style="width: 85%"></div>
+              </div>
+            </div>
+            <div class="quota-track-item">
+              <div class="quota-track-header">
+                <span class="quota-rep-name">Pharmacy Calls Target</span>
+                <span class="quota-percentage">72%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill medium" style="width: 72%"></div>
+              </div>
+            </div>
+            <div class="quota-track-item">
+              <div class="quota-track-header">
+                <span class="quota-rep-name">Sample Distribution</span>
+                <span class="quota-percentage">91%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill high" style="width: 91%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="info-box warning" id="quotaAlerts">
+            <strong>Attention:</strong> 2 reps falling behind monthly target
+          </div>
+        </div>
+
+        <!-- Inventory / Materials Monitoring -->
+        <div class="card">
+          <h2>Materials & Inventory</h2>
+          <div class="inventory-list" id="inventoryList">
+            <div class="inventory-item">
+              <div class="inventory-info">
+                <span class="material-symbols-outlined">medication</span>
+                <div>
+                  <strong>Biogesic Samples</strong>
+                  <span>1,250 units distributed</span>
+                </div>
+              </div>
+              <span class="inventory-trend up">+12%</span>
+            </div>
+            <div class="inventory-item">
+              <div class="inventory-info">
+                <span class="material-symbols-outlined">medication</span>
+                <div>
+                  <strong>Neozep Samples</strong>
+                  <span>980 units distributed</span>
+                </div>
+              </div>
+              <span class="inventory-trend up">+8%</span>
+            </div>
+            <div class="inventory-item">
+              <div class="inventory-info">
+                <span class="material-symbols-outlined">campaign</span>
+                <div>
+                  <strong>Promotional Materials</strong>
+                  <span>450 sets distributed</span>
+                </div>
+              </div>
+              <span class="inventory-trend down">-3%</span>
+            </div>
+          </div>
+          <div class="info-box success">
+            <strong>Stock Status:</strong> All materials adequately stocked
           </div>
         </div>
       </div>
     </div>
   </main>
 
-  <script type="module">
-    import { requireAdmin, logout, getUserRole } from "/js/auth.js";
-    import { supabase } from "/js/supabaseClient.js";
-
-    async function initAdmin() {
-      // Check kung admin talaga
-      const session = await requireAdmin();
-      if (!session) return;
-
-      // Show admin badge
-      document.getElementById('adminBadge').style.display = 'inline-block';
-
-      // Setup logout buttons
-      const logoutBtn = document.querySelector("#logoutBtn");
-      const logoutBtnMobile = document.querySelector("#logoutBtnMobile");
-
-      if (logoutBtn) {
-        logoutBtn.addEventListener("click", logout);
-      }
-      if (logoutBtnMobile) {
-        logoutBtnMobile.addEventListener("click", logout);
-      }
-
-      // Load all reps
-      await loadReps();
-      
-      // Load all activities
-      await loadAllActivities();
-    }
-
-    async function loadReps() {
-      // Kunin lahat ng repmeds users
-      const { data: reps, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('role', 'repmeds');
-
-      if (error) {
-        console.error('Error loading reps:', error);
-        return;
-      }
-
-      // Update count
-      document.getElementById('totalReps').textContent = reps?.length || 0;
-
-      // Render rep list
-      const repListEl = document.getElementById('repList');
-      if (reps && reps.length > 0) {
-        repListEl.innerHTML = reps.map(rep => `
-          <div class="rep-item">
-            <span class="rep-name">${rep.full_name}</span>
-            <span class="rep-email">${rep.email}</span>
-          </div>
-        `).join('');
-      } else {
-        repListEl.innerHTML = '<p class="empty-text">No representatives found</p>';
-      }
-    }
-
-    async function loadAllActivities() {
-      // TODO: Implement based on your activities table
-      // Kunin lahat ng activities mula sa lahat ng users
-      // const { data: activities, error } = await supabase
-      //   .from('activities')
-      //   .select('*, profiles(full_name)')
-      //   .order('created_at', { ascending: false });
-      
-      // For now, placeholder lang
-      console.log('Loading all activities...');
-    }
-
-    initAdmin();
-  </script>
+  <script type="module" src="/js/admin.js"></script>
 </body>
 </html>

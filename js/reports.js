@@ -1,6 +1,6 @@
 // Reports.js - Live data from Supabase
 import { supabase } from "./supabaseClient.js";
-import { requireAuth, getUser } from "./auth.js";
+import { requireAuth, getUser, updateAdminNav } from "./auth.js";
 
 // DOM Elements
 const reportsTableBody = document.querySelector(".reports-table tbody");
@@ -10,6 +10,9 @@ const pendingReportsEl = document.querySelector(".summary-card:nth-child(3) .sum
 
 // Initialize reports page
 async function initReports() {
+  // Update admin nav visibility
+  await updateAdminNav();
+  
   const user = await requireAuth();
   if (!user) return;
 

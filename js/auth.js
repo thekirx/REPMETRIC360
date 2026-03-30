@@ -6,6 +6,23 @@ export async function getSession() {
   return data?.session ?? null;
 }
 
+// Show/hide admin navigation links based on user role
+export async function updateAdminNav() {
+  const adminLinks = document.querySelectorAll(".admin-only");
+  
+  try {
+    const isUserAdmin = await isAdmin();
+    adminLinks.forEach(link => {
+      link.style.display = isUserAdmin ? "" : "none";
+    });
+  } catch (error) {
+    console.error("Error updating admin nav:", error);
+    adminLinks.forEach(link => {
+      link.style.display = "none";
+    });
+  }
+}
+
 export async function getUser() {
   const { data } = await supabase.auth.getSession();
   return data?.session?.user ?? null;

@@ -1,6 +1,6 @@
 // Quotas.js - Live data from Supabase
 import { supabase } from "./supabaseClient.js";
-import { requireAuth } from "./auth.js";
+import { requireAuth, updateAdminNav } from "./auth.js";
 
 // DOM Elements
 const summaryCardsEl = document.querySelector(".quota-summary");
@@ -8,6 +8,9 @@ const quotasProgressEl = document.querySelector(".quotas-progress .card");
 
 // Initialize quotas page
 async function initQuotas() {
+  // Update admin nav visibility
+  await updateAdminNav();
+  
   const user = await requireAuth();
   if (!user) return;
 

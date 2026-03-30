@@ -1,6 +1,6 @@
 // Schedule.js - Live data from Supabase
 import { supabase } from "./supabaseClient.js";
-import { requireAuth, getUser } from "./auth.js";
+import { requireAuth, getUser, updateAdminNav } from "./auth.js";
 
 // DOM Elements
 const appointmentsListEl = document.querySelector(".appointment-list");
@@ -12,14 +12,51 @@ let selectedDate = new Date();
 
 // Initialize schedule page
 async function initSchedule() {
+  // Update admin nav visibility
+  await updateAdminNav();
+  
   const user = await requireAuth();
   if (!user) return;
 
-  // Setup calendar
+  // Setup calendar with today's date highlighted
   setupCalendar();
+  highlightToday();
   
   // Load appointments for selected date
   await loadAppointments(user.id, selectedDate);
+}
+
+// Highlight today's date on calendar
+function highlightToday() {
+  const today = new Date();
+  const currentDay = today.getDate();
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
+  
+  // Update calendar header to current month/year
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+  const header = document.querySelector(".calendar-header h2");
+  if (header) {
+    header.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+  }
+  
+  // Highlight today's date
+  const calendarDays = document.querySelectorAll(".calendar-day");
+  calendarDays.forEach(day => {
+    day.classList.remove("selected");
+    if (parseInt(day.textContent) === currentDay) {
+      day.classList.add("selected");
+    }
+  });
+  
+  // Update title to today
+  if (appointmentsTitleEl) {
+    appointmentsTitleEl.textContent = `${currentDay} ${monthNames[currentMonth]} Appointments`;
+  }
+  
+  // Update selected date
+  selectedDate = today;
 }
 
 // Setup calendar interactions

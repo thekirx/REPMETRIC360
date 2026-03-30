@@ -32,6 +32,7 @@
       <nav class="navbar-links">
         <a href="index.html" class="nav-link active">Home</a>
         <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="admin.html" class="nav-link admin-only" style="display: none;">Admin</a>
         <a href="schedule.html" class="nav-link">My Schedule</a>
         <a href="support.html" class="nav-link">Support</a>
       </nav>
@@ -51,6 +52,7 @@
     <div class="mobile-menu">
       <a href="index.html" class="mobile-link active">Home</a>
       <a href="dashboard.html" class="mobile-link">Dashboard</a>
+      <a href="admin.html" class="mobile-link admin-only" style="display: none;">Admin</a>
       <a href="schedule.html" class="mobile-link">My Schedule</a>
       <a href="support.html" class="mobile-link">Support</a>
       <div class="mobile-actions">
@@ -113,7 +115,7 @@
   </section>
 
   <script type="module">
-    import { getSession, logout } from "/js/auth.js";
+    import { getSession, logout, isAdmin } from "/js/auth.js";
 
     async function updateNavbar() {
       const session = await getSession();
@@ -122,6 +124,16 @@
       const mobileActions = document.querySelector(".mobile-actions");
       
       if (session) {
+        // Check if user is admin
+        const admin = await isAdmin();
+        
+        // Show admin links if user is admin
+        if (admin) {
+          document.querySelectorAll(".admin-only").forEach(el => {
+            el.style.display = "";
+          });
+        }
+        
         // User is logged in - show logout button
         const logoutBtnHTML = `<button id="logoutBtn" class="btn btn-secondary">Logout</button>`;
         

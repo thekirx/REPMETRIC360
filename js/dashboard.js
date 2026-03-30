@@ -1,6 +1,6 @@
 // Dashboard.js - Live data from Supabase
 import { supabase } from "./supabaseClient.js";
-import { requireAuth, logout, getUser } from "./auth.js";
+import { requireAuth, logout, getUser, updateAdminNav } from "./auth.js";
 
 // DOM Elements
 const activityFeedEl = document.querySelector(".activity-feed");
@@ -8,6 +8,9 @@ const progressContainerEl = document.querySelector(".dashboard-right .card:first
 
 // Initialize dashboard
 async function initDashboard() {
+  // Update admin nav visibility
+  await updateAdminNav();
+  
   const user = await requireAuth();
   if (!user) return;
 
