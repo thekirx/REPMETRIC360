@@ -12,7 +12,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   console.error("I-set ang VITE_SUPABASE_URL at VITE_SUPABASE_ANON_KEY sa Vercel.");
 }
 
-export { SUPABASE_URL, SUPABASE_ANON_KEY };
+console.log("Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
+console.log("Supabase Key:", import.meta.env.VITE_SUPABASE_ANON_KEY?.substring(0,5) + "...");
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
