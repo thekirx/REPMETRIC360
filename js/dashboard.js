@@ -8,11 +8,11 @@ const progressContainerEl = document.querySelector(".dashboard-right .card:first
 
 // Initialize dashboard
 async function initDashboard() {
-  // Update admin nav visibility
-  await updateAdminNav();
-  
   const user = await requireAuth();
   if (!user) return;
+  
+  // Update admin nav visibility AFTER auth is confirmed
+  await updateAdminNav();
 
   // Load all data
   await Promise.all([

@@ -21,11 +21,11 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
 
 // Initialize schedule page
 async function initSchedule() {
-  // Update admin nav visibility
-  await updateAdminNav();
-  
   const user = await requireAuth();
   if (!user) return;
+
+  // Update admin nav visibility
+  await updateAdminNav();
 
   // DEV NOTE: Generate calendar muna bago mag-setup ng click handlers
   // Dapat April 2026 ang default (current month based on system time)

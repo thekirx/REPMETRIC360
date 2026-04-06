@@ -10,11 +10,11 @@ const pendingReportsEl = document.querySelector(".summary-card:nth-child(3) .sum
 
 // Initialize reports page
 async function initReports() {
-  // Update admin nav visibility
-  await updateAdminNav();
-  
   const user = await requireAuth();
   if (!user) return;
+
+  // Update admin nav visibility
+  await updateAdminNav();
 
   await loadReports(user.id);
 }

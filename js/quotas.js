@@ -8,11 +8,11 @@ const quotasProgressEl = document.querySelector(".quotas-progress .card");
 
 // Initialize quotas page
 async function initQuotas() {
-  // Update admin nav visibility
-  await updateAdminNav();
-  
   const user = await requireAuth();
   if (!user) return;
+
+  // Update admin nav visibility
+  await updateAdminNav();
 
   await loadQuotaData(user.id);
 }

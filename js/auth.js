@@ -12,6 +12,7 @@ export async function updateAdminNav() {
   
   try {
     const isUserAdmin = await isAdmin();
+    console.log("[updateAdminNav] isUserAdmin:", isUserAdmin);
     adminLinks.forEach(link => {
       link.style.display = isUserAdmin ? "" : "none";
     });
@@ -30,26 +31,45 @@ export async function getUser() {
 
 export async function getUserRole() {
   const session = await getSession();
-  if (!session) return null;
+  console.log("[getUserRole] Checking user ID:", session?.user?.id);
+  
+  if (!session) {
+    console.log("[getUserRole] No session found, returning null");
+    return null;
+  }
   
   // Kunin ang role mula sa user metadata
   const role = session.user.user_metadata?.role;
-  if (role) return role;
+  console.log("[getUserRole] user_metadata.role found:", role);
+  
+  if (role) {
+    console.log("[getUserRole] Returning role from user_metadata:", role.toLowerCase());
+    return role.toLowerCase();
+  }
   
   // Fallback: kunin mula sa profiles table
+  console.log("[getUserRole] Querying profiles table for user:", session.user.id);
   const { data, error } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", session.user.id)
     .single();
   
-  if (error || !data) return "repmeds"; // Default role
-  return data.role;
+  console.log("[getUserRole] Profiles query result - data:", data, "error:", error);
+  
+  if (error || !data) {
+    console.log("[getUserRole] No profile found or error, returning default 'repmeds'");
+    return "repmeds"; // Default role
+  }
+  
+  console.log("[getUserRole] Returning role from profiles table:", data.role);
+  return data.role?.toLowerCase() || "repmeds";
 }
 
 export async function isAdmin() {
   const role = await getUserRole();
-  return role === "admin";
+  console.log("[isAdmin] Role value:", role, "Comparison result:", role?.toLowerCase() === "admin");
+  return role?.toLowerCase() === "admin";
 }
 
 export async function requireAuth() {
