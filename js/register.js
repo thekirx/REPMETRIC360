@@ -1,5 +1,5 @@
 // Register form handler
-import { supabase } from "./supabaseClient.js";
+import { supabase } from "./supabaseclient.js";
 
 // Toggle password visibility para sa lahat ng password fields
 document.querySelectorAll(".password-toggle").forEach((toggleBtn) => {
