@@ -1,5 +1,5 @@
 // Dashboard.js - Live data from Supabase
-import { supabase } from "./supabaseClient.js";
+import { supabase } from "./supabaseclient.js";
 import { requireAuth, logout, getUser, updateAdminNav } from "./auth.js";
 
 // DOM Elements
