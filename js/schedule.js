@@ -5,10 +5,19 @@ import { requireAuth, getUser, updateAdminNav } from "./auth.js";
 // DOM Elements
 const appointmentsListEl = document.querySelector(".appointment-list");
 const appointmentsTitleEl = document.querySelector(".appointments-section h2");
+const calendarGridEl = document.getElementById("calendarGrid");
+const currentMonthDisplayEl = document.getElementById("currentMonthDisplay");
+const prevMonthBtn = document.getElementById("prevMonth");
+const nextMonthBtn = document.getElementById("nextMonth");
 
 // State
-let currentDate = new Date();
-let selectedDate = new Date();
+let currentDate = new Date(); // Ito yung month/year na naka-display sa calendar
+let selectedDate = new Date(); // Ito yung specific day na pinili ng user
+let displayDate = new Date(); // Ito yung current month na tinitignan sa calendar
+
+// Month names para sa header display
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"];
 
 // Initialize schedule page
 async function initSchedule() {
@@ -18,66 +27,128 @@ async function initSchedule() {
   const user = await requireAuth();
   if (!user) return;
 
-  // Setup calendar with today's date highlighted
+  // DEV NOTE: Generate calendar muna bago mag-setup ng click handlers
+  // Dapat April 2026 ang default (current month based on system time)
+  generateCalendar(displayDate.getFullYear(), displayDate.getMonth());
+  
+  // Setup calendar interactions
   setupCalendar();
-  highlightToday();
   
   // Load appointments for selected date
   await loadAppointments(user.id, selectedDate);
 }
 
+// Generate calendar grid dynamically based on year and month
+// DEV NOTE: Dapat dynamic to - kaya nga generateCalendar function para flexible
+function generateCalendar(year, month) {
+  if (!calendarGridEl) return;
+  
+  // Clear existing day cells pero keep the headers (first 7 children)
+  // Ito yung Sun-Mon-Tue-Wed-Thu-Fri-Sat headers
+  const headers = Array.from(calendarGridEl.children).slice(0, 7);
+  calendarGridEl.innerHTML = "";
+  headers.forEach(header => calendarGridEl.appendChild(header));
+  
+  // Calculate first day ng month (0 = Sunday, 1 = Monday, etc.)
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
+  
+  // Calculate total days sa month na to
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  
+  // Update header display
+  if (currentMonthDisplayEl) {
+    currentMonthDisplayEl.textContent = `${monthNames[month]} ${year}`;
+  }
+  
+  // Create empty placeholder divs para sa days before the 1st
+  // Para aligned yung calendar properly
+  for (let i = 0; i < firstDayOfMonth; i++) {
+    const emptyDay = document.createElement("div");
+    emptyDay.className = "calendar-day empty";
+    emptyDay.style.visibility = "hidden"; // Hide pero occupy pa rin ng space
+    calendarGridEl.appendChild(emptyDay);
+  }
+  
+  // Create .calendar-day divs para sa bawat day ng month
+  const today = new Date();
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dayEl = document.createElement("div");
+    dayEl.className = "calendar-day";
+    dayEl.textContent = day;
+    dayEl.dataset.day = day; // Store day number para madaling makuha later
+    
+    // Highlight today's date with .selected class if viewing current month
+    // DEV NOTE: Check muna if same month and year para accurate
+    if (year === today.getFullYear() && 
+        month === today.getMonth() && 
+        day === today.getDate()) {
+      dayEl.classList.add("selected");
+      
+      // Update selected date to today
+      selectedDate = new Date(year, month, day);
+      
+      // Update appointments title
+      if (appointmentsTitleEl) {
+        appointmentsTitleEl.textContent = `${day} ${monthNames[month]} Appointments`;
+      }
+    }
+    
+    calendarGridEl.appendChild(dayEl);
+  }
+}
+
 // Highlight today's date on calendar
+// DEV NOTE: Simplified na to kasi sa generateCalendar na nangyayari yung highlighting
 function highlightToday() {
   const today = new Date();
-  const currentDay = today.getDate();
-  const currentMonth = today.getMonth();
-  const currentYear = today.getFullYear();
   
-  // Update calendar header to current month/year
-  const monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"];
-  const header = document.querySelector(".calendar-header h2");
-  if (header) {
-    header.textContent = `${monthNames[currentMonth]} ${currentYear}`;
-  }
-  
-  // Highlight today's date
-  const calendarDays = document.querySelectorAll(".calendar-day");
-  calendarDays.forEach(day => {
-    day.classList.remove("selected");
-    if (parseInt(day.textContent) === currentDay) {
-      day.classList.add("selected");
+  // Check kung current month yung naka-display
+  if (displayDate.getMonth() === today.getMonth() && 
+      displayDate.getFullYear() === today.getFullYear()) {
+    // Find today's day element
+    const calendarDays = calendarGridEl.querySelectorAll(".calendar-day:not(.empty)");
+    calendarDays.forEach(day => {
+      day.classList.remove("selected");
+      if (parseInt(day.textContent) === today.getDate()) {
+        day.classList.add("selected");
+      }
+    });
+    
+    // Update selected date to today
+    selectedDate = new Date();
+    
+    // Update appointments title
+    if (appointmentsTitleEl) {
+      appointmentsTitleEl.textContent = `${today.getDate()} ${monthNames[today.getMonth()]} Appointments`;
     }
-  });
-  
-  // Update title to today
-  if (appointmentsTitleEl) {
-    appointmentsTitleEl.textContent = `${currentDay} ${monthNames[currentMonth]} Appointments`;
   }
-  
-  // Update selected date
-  selectedDate = today;
 }
 
 // Setup calendar interactions
+// DEV NOTE: Gumamit tayo ng event delegation para kahit dynamic yung days, gumana pa rin
 function setupCalendar() {
-  const calendarDays = document.querySelectorAll(".calendar-day");
-  
-  calendarDays.forEach(day => {
-    day.addEventListener("click", async () => {
-      // Remove selected from all
+  // Event delegation sa calendar grid para sa dynamically created days
+  if (calendarGridEl) {
+    calendarGridEl.addEventListener("click", async (e) => {
+      // Check kung .calendar-day yung tinap (at hindi empty placeholder)
+      const dayEl = e.target.closest(".calendar-day:not(.empty)");
+      if (!dayEl) return;
+      
+      // Remove selected from all days
+      const calendarDays = calendarGridEl.querySelectorAll(".calendar-day");
       calendarDays.forEach(d => d.classList.remove("selected"));
-      // Add selected to clicked
-      day.classList.add("selected");
+      
+      // Add selected to clicked day
+      dayEl.classList.add("selected");
       
       // Update selected date
-      const dayNum = parseInt(day.textContent);
-      selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayNum);
+      const dayNum = parseInt(dayEl.textContent);
+      selectedDate = new Date(displayDate.getFullYear(), displayDate.getMonth(), dayNum);
       
       // Update title
-      const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"];
-      appointmentsTitleEl.textContent = `${dayNum} ${monthNames[selectedDate.getMonth()]} Appointments`;
+      if (appointmentsTitleEl) {
+        appointmentsTitleEl.textContent = `${dayNum} ${monthNames[displayDate.getMonth()]} Appointments`;
+      }
       
       // Reload appointments
       const user = await getUser();
@@ -85,7 +156,23 @@ function setupCalendar() {
         await loadAppointments(user.id, selectedDate);
       }
     });
-  });
+  }
+  
+  // Month navigation handlers
+  // DEV NOTE: Dapat may prev/next month buttons para ma-navigate yung calendar
+  if (prevMonthBtn) {
+    prevMonthBtn.addEventListener("click", () => {
+      displayDate.setMonth(displayDate.getMonth() - 1);
+      generateCalendar(displayDate.getFullYear(), displayDate.getMonth());
+    });
+  }
+  
+  if (nextMonthBtn) {
+    nextMonthBtn.addEventListener("click", () => {
+      displayDate.setMonth(displayDate.getMonth() + 1);
+      generateCalendar(displayDate.getFullYear(), displayDate.getMonth());
+    });
+  }
 }
 
 // Fetch and render appointments for a specific date

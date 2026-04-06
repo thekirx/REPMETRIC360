@@ -594,14 +594,18 @@ html {
   color: #dc3545;
 }
 
-.password-input {
+/* DEV NOTE: Password input wrapper para sa eye icon toggle */
+.password-input,
+.password-input-wrapper {
   position: relative;
 }
 
-.password-input input {
+.password-input input,
+.password-input-wrapper input {
   padding-right: 45px;
 }
 
+/* DEV NOTE: Password toggle button - nasa right side ng input */
 .password-toggle {
   position: absolute;
   right: 10px;
@@ -612,6 +616,9 @@ html {
   cursor: pointer;
   color: #6b7280;
   padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .password-toggle:hover {
@@ -730,11 +737,31 @@ html {
   max-width: 450px;
 }
 
-.auth-card h1 {
+/* DEV NOTE: Auth header with logo icon at heading */
+.auth-header {
   text-align: center;
+  margin-bottom: 30px;
+}
+
+.auth-header .auth-logo {
+  font-size: 48px;
+  color: #0d9488;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  vertical-align: middle;
+}
+
+.auth-header h1 {
   font-size: 1.8rem;
   color: #1f2937;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
+}
+
+.auth-header p {
+  color: #6b7280;
+  font-size: 0.95rem;
 }
 
 .auth-form {

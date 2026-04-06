@@ -6,19 +6,13 @@
   <title>My Itinerary - RepMetric / 360</title>
   
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  
-  <script type="module" crossorigin src="/assets/schedule-DDJ7L6aZ.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-D4v529L2.js">
-  <link rel="modulepreload" crossorigin href="/assets/auth-8WVZwt0Y.js">
-  <link rel="stylesheet" crossorigin href="/assets/styles-C2wZ_EGY.css">
-</head>
-<!-- 
-  Schedule page - para sa itinerary ng field rep
-  what if Google Calendar API para auto-sync
-  lagyan natin color coding Yung calendar per activity type
--->
-<body>
 
+  <script type="module" crossorigin src="/assets/schedule-XFv3usR4.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/auth-DmsNQpks.js">
+  <link rel="stylesheet" crossorigin href="/assets/styles-CbQvbVcn.css">
+</head>
+
+<body>
   <header class="navbar">
     <div class="navbar-container">
       <div class="navbar-brand">
@@ -45,7 +39,7 @@
         <span class="hamburger-line"></span>
       </button>
     </div>
-    
+
     <div class="mobile-menu">
       <a href="index.html" class="mobile-link">Home</a>
       <a href="dashboard.html" class="mobile-link">Dashboard</a>
@@ -59,22 +53,18 @@
 
   <main class="page-container">
     <div class="page-header">
-     
       <h1>My Itinerary</h1>
       <p>Daily schedule and appointments</p>
     </div>
 
     <div class="schedule-grid">
-      <!-- Calendar Widget -->
-      <!-- FIXME: Yung calendar nav buttons wala pang function, display lang -->
-      <!-- NOTE: Feb 2026 starts on Sunday, 28 days lang - ayusin ko yung layout -->
       <div class="calendar-widget card">
         <div class="calendar-header">
-          <button class="calendar-nav">&lt;</button>
-          <h2>February 2026</h2>
-          <button class="calendar-nav">&gt;</button>
+          <button id="prevMonth" class="calendar-nav">&lt;</button>
+          <h2 id="currentMonthDisplay">Loading...</h2>
+          <button id="nextMonth" class="calendar-nav">&gt;</button>
         </div>
-        <div class="calendar-grid">
+        <div class="calendar-grid" id="calendarGrid">
           <div class="calendar-day-header">Sun</div>
           <div class="calendar-day-header">Mon</div>
           <div class="calendar-day-header">Tue</div>
@@ -82,99 +72,26 @@
           <div class="calendar-day-header">Thu</div>
           <div class="calendar-day-header">Fri</div>
           <div class="calendar-day-header">Sat</div>
-          
-          <!-- Feb 1, 2026 starts on Sunday - wala ng empty cells sa start -->
-          <div class="calendar-day">1</div>
-          <div class="calendar-day">2</div>
-          <div class="calendar-day">3</div>
-          <div class="calendar-day">4</div>
-          <div class="calendar-day">5</div>
-          <div class="calendar-day">6</div>
-          <div class="calendar-day">7</div>
-          <div class="calendar-day">8</div>
-          <div class="calendar-day">9</div>
-          <div class="calendar-day">10</div>
-          <div class="calendar-day">11</div>
-          <div class="calendar-day">12</div>
-          <div class="calendar-day">13</div>
-          <div class="calendar-day">14</div>
-          <div class="calendar-day">15</div>
-          <div class="calendar-day">16</div>
-          <div class="calendar-day selected">17</div>
-          <div class="calendar-day">18</div>
-          <div class="calendar-day">19</div>
-          <div class="calendar-day">20</div>
-          <div class="calendar-day">21</div>
-          <div class="calendar-day">22</div>
-          <div class="calendar-day">23</div>
-          <div class="calendar-day">24</div>
-          <div class="calendar-day">25</div>
-          <div class="calendar-day">26</div>
-          <div class="calendar-day">27</div>
-          <div class="calendar-day">28</div>
-          <!-- NOTE: Feb lang naman 28 days, tinanggal ko yung 29 at 30 -->
-        </div>
+          </div>
       </div>
 
       <div class="appointments-section">
-        <!-- TODO: Auto-update yung date based sa selected calendar day -->
-        <h2>17 February Appointments</h2>
+        <h2 id="selectedDateHeader">Select a day</h2>
         
-        <div class="appointment-list">
-          <!-- Appointment 1 - Morning visit -->
-          <div class="appointment-card">
-            <div class="appointment-time">08:30 AM</div>
-            <div class="appointment-details">
-              <h3>Dr. Santos - Cardio Specialist</h3>
-              <p>St. Luke's Medical Center, QC</p>
-            </div>
-            <span class="badge badge-success">Completed</span>
-          </div>
-
-          <!-- Appointment 2 - Pharmacy call -->
-          <div class="appointment-card">
-            <div class="appointment-time">10:15 AM</div>
-            <div class="appointment-details">
-              <h3>Mercury Drug</h3>
-              <p>Stock check - Quezon Ave branch</p>
-            </div>
-            <span class="badge badge-success">Completed</span>
-          </div>
-
-          <!-- Appointment 3 - Sample distribution -->
-          <div class="appointment-card">
-            <div class="appointment-time">11:45 AM</div>
-            <div class="appointment-details">
-              <h3>Sample Drop-off</h3>
-              <p>Biogesic & Neozep - 50pcs each</p>
-            </div>
-            <span class="badge badge-success">Completed</span>
-          </div>
-
-         
-          <!-- Appointment 4 - Afternoon visit -->
-          <div class="appointment-card">
-            <div class="appointment-time">02:00 PM</div>
-            <div class="appointment-details">
-              <h3>Dr. Reyes - Internal Medicine</h3>
-              <p>Makati Medical Center</p>
-            </div>
-            <span class="badge badge-warning">Pending</span>
-          </div>
-
-          <!-- Appointment 5 - End of day -->
-          <div class="appointment-card">
-            <div class="appointment-time">04:30 PM</div>
-            <div class="appointment-details">
-              <h3>Watsons Pharmacy</h3>
-              <p>SM North EDSA - Inventory check</p>
-            </div>
-            <span class="badge badge-warning">Pending</span>
-          </div>
+        <div class="appointment-list" id="appointmentList">
+          <p class="empty-msg">No appointments scheduled for this day.</p>
         </div>
       </div>
     </div>
   </main>
 
+  <script>
+    const hamburger = document.querySelector('.hamburger');
+    const mobileMenu = document.querySelector('.mobile-menu');
+
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.toggle('active');
+    });
+  </script>
 </body>
 </html>

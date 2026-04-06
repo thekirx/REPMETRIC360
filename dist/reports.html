@@ -7,10 +7,10 @@
   
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   
-  <script type="module" crossorigin src="/assets/reports-DBrsQWJn.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/supabaseClient-D4v529L2.js">
-  <link rel="modulepreload" crossorigin href="/assets/auth-8WVZwt0Y.js">
-  <link rel="stylesheet" crossorigin href="/assets/styles-C2wZ_EGY.css">
+ 
+  <script type="module" crossorigin src="/assets/reports-BAbrrB_F.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/auth-DmsNQpks.js">
+  <link rel="stylesheet" crossorigin href="/assets/styles-CbQvbVcn.css">
 </head>
 <!-- 
   Reports page - history ng mga logged activities
@@ -81,96 +81,8 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <!-- Report 1 - Today -->
-            <tr>
-              <td>2026-02-17</td>
-              <td>Dr. Santos - St. Luke's QC</td>
-              <td><span class="badge badge-type-visit">Visit</span></td>
-              <td><span class="badge badge-success">Completed</span></td>
-              <td>
-                <button class="btn-action btn-view">View</button>
-                <button class="btn-action btn-edit">Edit</button>
-              </td>
-            </tr>
-            <!-- Report 2 -->
-            <tr>
-              <td>2026-02-17</td>
-              <td>Mercury Drug - Quezon Ave</td>
-              <td><span class="badge badge-type-call">Call</span></td>
-              <td><span class="badge badge-success">Completed</span></td>
-              <td>
-                <button class="btn-action btn-view">View</button>
-                <button class="btn-action btn-edit">Edit</button>
-              </td>
-            </tr>
-            <!-- Report 3 - Sample distribution -->
-            <tr>
-              <td>2026-02-17</td>
-              <td>Biogesic samples - 20pcs</td>
-              <td><span class="badge badge-type-sample">Sample</span></td>
-              <td><span class="badge badge-success">Completed</span></td>
-              <td>
-                <button class="btn-action btn-view">View</button>
-                <button class="btn-action btn-edit">Edit</button>
-              </td>
-            </tr>
-            <!-- Report 4 - Yesterday -->
-            <tr>
-              <td>2026-02-16</td>
-              <td>Dr. Reyes - Makati Med</td>
-              <td><span class="badge badge-type-visit">Visit</span></td>
-              <td><span class="badge badge-success">Completed</span></td>
-              <td>
-                <button class="btn-action btn-view">View</button>
-                <button class="btn-action btn-edit">Edit</button>
-              </td>
-            </tr>
-            <!-- Report 5 -->
-            <tr>
-              <td>2026-02-16</td>
-              <td>Watsons - SM North</td>
-              <td><span class="badge badge-type-call">Call</span></td>
-              <td><span class="badge badge-warning">Pending</span></td>
-              <td>
-                <button class="btn-action btn-view">View</button>
-                <button class="btn-action btn-edit">Edit</button>
-              </td>
-            </tr>
-            <!-- Report 6 - Earlier -->
-            <tr>
-              <td>2026-02-15</td>
-              <td>Neozep samples - 30pcs</td>
-              <td><span class="badge badge-type-sample">Sample</span></td>
-              <td><span class="badge badge-success">Completed</span></td>
-              <td>
-                <button class="btn-action btn-view">View</button>
-                <button class="btn-action btn-edit">Edit</button>
-              </td>
-            </tr>
-            <!-- Report 7 -->
-            <tr>
-              <td>2026-02-15</td>
-              <td>Dr. Cruz - PGH</td>
-              <td><span class="badge badge-type-visit">Visit</span></td>
-              <td><span class="badge badge-success">Completed</span></td>
-              <td>
-                <button class="btn-action btn-view">View</button>
-                <button class="btn-action btn-edit">Edit</button>
-              </td>
-            </tr>
-            <!-- Report 8 -->
-            <tr>
-              <td>2026-02-14</td>
-              <td>Rose Pharmacy - Taft</td>
-              <td><span class="badge badge-type-call">Call</span></td>
-              <td><span class="badge badge-success">Completed</span></td>
-              <td>
-                <button class="btn-action btn-view">View</button>
-                <button class="btn-action btn-edit">Edit</button>
-              </td>
-            </tr>
-          </tbody>
+          <tbody id="reportsTableBody">
+  </tbody>
         </table>
       </div>
     </div>
@@ -183,21 +95,29 @@
       <div class="summary-grid">
         <div class="summary-card card">
           <h3>Total Reports</h3>
-          <div class="summary-number">32</div>
-        </div>
+          <div class="summary-number" id="totalReportsCount">--</div>
+    </div>
 
         <div class="summary-card card">
           <h3>Completed</h3>
-          <div class="summary-number success">28</div>
-        </div>
+          <div class="summary-number success" id="completedCount">--</div>
+    </div>
 
         <div class="summary-card card">
           <h3>Pending</h3>
-          <div class="summary-number warning">4</div>
-        </div>
+          <div class="summary-number warning" id="pendingCount">--</div>
+    </div>
       </div>
     </section>
   </main>
 
+  <script>
+  const hamburger = document.querySelector('.hamburger');
+  const mobileMenu = document.querySelector('.mobile-menu');
+
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('active');
+  });
+</script>
 </body>
 </html>

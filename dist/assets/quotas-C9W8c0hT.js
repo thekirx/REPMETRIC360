@@ -1,4 +1,4 @@
-import{s as _}from"./supabaseClient-D4v529L2.js";/* empty css               */import{r as $}from"./auth-8WVZwt0Y.js";import"https://esm.sh/@supabase/supabase-js@2";const h=document.querySelector(".quota-summary"),y=document.querySelector(".quotas-progress .card");async function C(){const t=await $();t&&await M(t.id)}async function M(t){const i=new Date().toISOString().slice(0,7),{data:s,error:e}=await _.from("quotas").select("*").eq("rep_id",t).eq("month",i).single();e&&e.code!=="PGRST116"&&console.error("Error loading quota:",e);const c=new Date;c.setDate(1),c.setHours(0,0,0,0);const{data:a,error:l}=await _.from("visits").select("id, status").eq("rep_id",t).gte("scheduled_date",c.toISOString());l&&console.error("Error loading visits:",l),a!=null&&a.length;const n=(a==null?void 0:a.filter(b=>b.status==="completed").length)||0,r={doctor_visits:(s==null?void 0:s.doctor_visits_target)||25,pharmacy_calls:(s==null?void 0:s.pharmacy_calls_target)||15,sample_distribution:(s==null?void 0:s.sample_distribution_target)||50,meetings:(s==null?void 0:s.meetings_target)||10},d=Math.min(n,r.doctor_visits),m=Math.min(Math.floor(n*.6),r.pharmacy_calls),p=Math.min(Math.floor(n*2.5),r.sample_distribution),u=Math.min(Math.floor(n*.3),r.meetings),g=r.doctor_visits+r.pharmacy_calls+r.sample_distribution+r.meetings,v=d+m+p+u,f=Math.round(v/g*100);S(f,n,g-v),w({doctor_visits:{current:d,target:r.doctor_visits},pharmacy_calls:{current:m,target:r.pharmacy_calls},sample_distribution:{current:p,target:r.sample_distribution},meetings:{current:u,target:r.meetings}})}function S(t,i,s){if(!h)return;const e=h.querySelectorAll(".summary-card");e[0]&&(e[0].querySelector(".summary-number").textContent=`${t}%`),e[1]&&(e[1].querySelector(".summary-number").textContent=i),e[2]&&(e[2].querySelector(".summary-number").textContent=s)}function w(t){if(!y)return;const i=`
+import{u as $,r as C,s as _}from"./auth-DmsNQpks.js";/* empty css               */import"https://esm.sh/@supabase/supabase-js@2";const h=document.querySelector(".quota-summary"),y=document.querySelector(".quotas-progress .card");async function M(){await $();const t=await C();t&&await S(t.id)}async function S(t){const i=new Date().toISOString().slice(0,7),{data:s,error:a}=await _.from("quotas").select("*").eq("rep_id",t).eq("month",i).single();a&&a.code!=="PGRST116"&&console.error("Error loading quota:",a);const o=new Date;o.setDate(1),o.setHours(0,0,0,0);const{data:e,error:l}=await _.from("visits").select("id, status").eq("rep_id",t).gte("scheduled_date",o.toISOString());l&&console.error("Error loading visits:",l),e!=null&&e.length;const n=(e==null?void 0:e.filter(b=>b.status==="completed").length)||0,r={doctor_visits:(s==null?void 0:s.doctor_visits_target)||25,pharmacy_calls:(s==null?void 0:s.pharmacy_calls_target)||15,sample_distribution:(s==null?void 0:s.sample_distribution_target)||50,meetings:(s==null?void 0:s.meetings_target)||10},d=Math.min(n,r.doctor_visits),m=Math.min(Math.floor(n*.6),r.pharmacy_calls),p=Math.min(Math.floor(n*2.5),r.sample_distribution),u=Math.min(Math.floor(n*.3),r.meetings),g=r.doctor_visits+r.pharmacy_calls+r.sample_distribution+r.meetings,v=d+m+p+u,f=Math.round(v/g*100);w(f,n,g-v),D({doctor_visits:{current:d,target:r.doctor_visits},pharmacy_calls:{current:m,target:r.pharmacy_calls},sample_distribution:{current:p,target:r.sample_distribution},meetings:{current:u,target:r.meetings}})}function w(t,i,s){if(!h)return;const a=h.querySelectorAll(".summary-card");a[0]&&(a[0].querySelector(".summary-number").textContent=`${t}%`),a[1]&&(a[1].querySelector(".summary-number").textContent=i),a[2]&&(a[2].querySelector(".summary-number").textContent=s)}function D(t){if(!y)return;const i=`
     <h2>Activity Quotas</h2>
     <p class="card-subtitle">Progress sa monthly targets</p>
 
@@ -11,7 +11,7 @@ import{s as _}from"./supabaseClient-D4v529L2.js";/* empty css               */im
         <span class="quota-count">${t.doctor_visits.current} / ${t.doctor_visits.target}</span>
       </div>
       <div class="progress-bar">
-        <div class="progress-fill ${o(t.doctor_visits.current/t.doctor_visits.target)}" 
+        <div class="progress-fill ${c(t.doctor_visits.current/t.doctor_visits.target)}" 
              style="width: ${t.doctor_visits.current/t.doctor_visits.target*100}%"></div>
       </div>
       <div class="quota-footer">
@@ -29,7 +29,7 @@ import{s as _}from"./supabaseClient-D4v529L2.js";/* empty css               */im
         <span class="quota-count">${t.pharmacy_calls.current} / ${t.pharmacy_calls.target}</span>
       </div>
       <div class="progress-bar">
-        <div class="progress-fill ${o(t.pharmacy_calls.current/t.pharmacy_calls.target)}" 
+        <div class="progress-fill ${c(t.pharmacy_calls.current/t.pharmacy_calls.target)}" 
              style="width: ${t.pharmacy_calls.current/t.pharmacy_calls.target*100}%"></div>
       </div>
       <div class="quota-footer">
@@ -47,7 +47,7 @@ import{s as _}from"./supabaseClient-D4v529L2.js";/* empty css               */im
         <span class="quota-count">${t.sample_distribution.current} / ${t.sample_distribution.target}</span>
       </div>
       <div class="progress-bar">
-        <div class="progress-fill ${o(t.sample_distribution.current/t.sample_distribution.target)}" 
+        <div class="progress-fill ${c(t.sample_distribution.current/t.sample_distribution.target)}" 
              style="width: ${t.sample_distribution.current/t.sample_distribution.target*100}%"></div>
       </div>
       <div class="quota-footer">
@@ -65,7 +65,7 @@ import{s as _}from"./supabaseClient-D4v529L2.js";/* empty css               */im
         <span class="quota-count">${t.meetings.current} / ${t.meetings.target}</span>
       </div>
       <div class="progress-bar">
-        <div class="progress-fill ${o(t.meetings.current/t.meetings.target)}" 
+        <div class="progress-fill ${c(t.meetings.current/t.meetings.target)}" 
              style="width: ${t.meetings.current/t.meetings.target*100}%"></div>
       </div>
       <div class="quota-footer">
@@ -73,4 +73,4 @@ import{s as _}from"./supabaseClient-D4v529L2.js";/* empty css               */im
         <span>${t.meetings.target-t.meetings.current} na lang</span>
       </div>
     </div>
-  `;y.innerHTML=i}function o(t){return t<.3?"low":t<.7?"medium":"high"}document.addEventListener("DOMContentLoaded",C);
+  `;y.innerHTML=i}function c(t){return t<.3?"low":t<.7?"medium":"high"}document.addEventListener("DOMContentLoaded",M);

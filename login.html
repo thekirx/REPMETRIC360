@@ -94,22 +94,13 @@
   </main>
 
   <script>
+    // DEV NOTE: Hamburger menu toggle lang ang natira dito, password toggle nasa login.js na
     const hamburger = document.querySelector('.hamburger');
     const mobileMenu = document.querySelector('.mobile-menu');
-    const togglePassword = document.querySelector('#togglePassword');
-    const password = document.querySelector('#password');
-    const toggleIcon = document.querySelector('#toggleIcon');
 
     // Hamburger Menu Logic
     hamburger.addEventListener('click', () => {
       mobileMenu.classList.toggle('active');
-    });
-
-    // Password Visibility Logic
-    togglePassword.addEventListener('click', function () {
-      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-      password.setAttribute('type', type);
-      toggleIcon.textContent = type === 'password' ? 'visibility' : 'visibility_off';
     });
   </script>
 </body>
