@@ -10,6 +10,7 @@ export default defineConfig({
         login: resolve(__dirname, 'login.html'),
         register: resolve(__dirname, 'register.html'),
         dashboard: resolve(__dirname, 'dashboard.html'),
+        admin: resolve(__dirname, 'admin.html'),
         schedule: resolve(__dirname, 'schedule.html'),
         reports: resolve(__dirname, 'reports.html'),
         quotas: resolve(__dirname, 'quotas.html'),
