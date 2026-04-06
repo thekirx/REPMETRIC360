@@ -1,5 +1,5 @@
 // Quotas.js - Live data from Supabase
-import { supabase } from "./supabaseClient.js";
+import { supabase } from "./supabaseclient.js";
 import { requireAuth, updateAdminNav } from "./auth.js";
 
 // DOM Elements
