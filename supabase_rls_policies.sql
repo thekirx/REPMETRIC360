@@ -177,6 +177,22 @@ CREATE POLICY "Admin can manage quotas"
   );
 
 -- ============================================
+-- QUOTAS TABLE - meetings_target COLUMN SUPPORT
+-- ============================================
+
+-- The quotas table should have a meetings_target column to store the target
+-- number of meetings for each rep. This column is used by the admin dashboard
+-- to set and manage meeting targets.
+
+-- If meetings_target column does not exist, run:
+-- ALTER TABLE quotas ADD COLUMN IF NOT EXISTS meetings_target INTEGER DEFAULT 10;
+
+-- NOTE: The 'upsert-quotas' Edge Function deployed in Supabase also needs to be
+-- updated to accept and handle the 'meetings_target' field in its request body
+-- and include it in the upsert operation. Ensure the Edge Function is modified
+-- to pass this field when inserting or updating quota records.
+
+-- ============================================
 -- ACTIVITIES TABLE (if you have one)
 -- ============================================
 

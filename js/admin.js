@@ -770,3 +770,311 @@ function showErrorInStats() {
 
 // Initialize when DOM is ready
 document.addEventListener("DOMContentLoaded", initAdminDashboard);
+
+// ============================================
+// QUOTA MANAGEMENT FUNCTIONS
+// ============================================
+
+// DOM Elements for Quota Management
+const quotaElements = {
+  repSelect: document.getElementById("quota-rep-select"),
+  monthPicker: document.getElementById("quota-month-picker"),
+  doctorVisitsTarget: document.getElementById("doctor-visits-target"),
+  pharmacyCallsTarget: document.getElementById("pharmacy-calls-target"),
+  sampleDistributionTarget: document.getElementById("sample-distribution-target"),
+  meetingsTarget: document.getElementById("meetings-target"),
+  loadQuotaBtn: document.getElementById("load-quota-btn"),
+  saveQuotaBtn: document.getElementById("save-quota-btn"),
+  quotaFeedback: document.getElementById("quota-feedback"),
+  quotasTableBody: document.getElementById("quotas-table-body")
+};
+
+// Cache for profiles data
+let profilesCache = [];
+
+/**
+ * Load all RepMeds into the dropdown
+ */
+async function loadRepList() {
+  try {
+    const { data: profiles, error } = await supabase
+      .from("profiles")
+      .select("id, full_name, email")
+      .eq("role", "repmeds")
+      .order("full_name", { ascending: true });
+
+    if (error) throw error;
+
+    profilesCache = profiles || [];
+
+    // Keep the default option and add rep options
+    const defaultOption = quotaElements.repSelect.querySelector('option[value=""]');
+    quotaElements.repSelect.innerHTML = '';
+    if (defaultOption) {
+      quotaElements.repSelect.appendChild(defaultOption);
+    } else {
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = "Select a RepMed...";
+      quotaElements.repSelect.appendChild(option);
+    }
+
+    profilesCache.forEach(profile => {
+      const option = document.createElement("option");
+      option.value = profile.id;
+      option.textContent = profile.full_name || profile.email || "Unknown";
+      quotaElements.repSelect.appendChild(option);
+    });
+
+  } catch (error) {
+    console.error("Error loading rep list:", error);
+    showQuotaFeedback("Failed to load RepMed list", "error");
+  }
+}
+
+/**
+ * Load quota data for a specific rep and month
+ * @param {string} repId - The rep's profile ID
+ * @param {string} month - Month in YYYY-MM format
+ */
+async function loadRepQuota(repId, month) {
+  try {
+    if (!repId || !month) {
+      showQuotaFeedback("Please select a RepMed and month", "error");
+      return;
+    }
+
+    const { data: quota, error } = await supabase
+      .from("quotas")
+      .select("*")
+      .eq("rep_id", repId)
+      .eq("month", month)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error; // PGRST116 = no rows returned
+
+    if (quota) {
+      // Populate inputs with existing values
+      quotaElements.doctorVisitsTarget.value = quota.doctor_visits_target || 0;
+      quotaElements.pharmacyCallsTarget.value = quota.pharmacy_calls_target || 0;
+      quotaElements.sampleDistributionTarget.value = quota.sample_distribution_target || 0;
+      quotaElements.meetingsTarget.value = quota.meetings_target || 0;
+      showQuotaFeedback("Quota loaded successfully", "success");
+    } else {
+      // Clear inputs for new quota
+      quotaElements.doctorVisitsTarget.value = "";
+      quotaElements.pharmacyCallsTarget.value = "";
+      quotaElements.sampleDistributionTarget.value = "";
+      quotaElements.meetingsTarget.value = "";
+      showQuotaFeedback("No quota found for this rep/month — enter new targets", "success");
+    }
+
+  } catch (error) {
+    console.error("Error loading quota:", error);
+    showQuotaFeedback(`Error loading quota: ${error.message}`, "error");
+  }
+}
+
+/**
+ * Save quota data via Edge Function
+ */
+async function saveQuota() {
+  try {
+    // Get values from form
+    const repId = quotaElements.repSelect.value;
+    const month = quotaElements.monthPicker.value;
+    const doctorVisitsTarget = parseInt(quotaElements.doctorVisitsTarget.value, 10) || 0;
+    const pharmacyCallsTarget = parseInt(quotaElements.pharmacyCallsTarget.value, 10) || 0;
+    const sampleDistributionTarget = parseInt(quotaElements.sampleDistributionTarget.value, 10) || 0;
+    const meetingsTarget = parseInt(quotaElements.meetingsTarget.value, 10) || 0;
+
+    // Validation
+    if (!repId) {
+      showQuotaFeedback("Please select a RepMed", "error");
+      return;
+    }
+    if (!month) {
+      showQuotaFeedback("Please select a month", "error");
+      return;
+    }
+    if (doctorVisitsTarget < 0 || pharmacyCallsTarget < 0 || sampleDistributionTarget < 0 || meetingsTarget < 0) {
+      showQuotaFeedback("All targets must be positive numbers", "error");
+      return;
+    }
+
+    // Call the Edge Function
+    const { data, error } = await supabase.functions.invoke("upsert-quotas", {
+      body: {
+        rep_id: repId,
+        month: month,
+        doctor_visits_target: doctorVisitsTarget,
+        pharmacy_calls_target: pharmacyCallsTarget,
+        sample_distribution_target: sampleDistributionTarget,
+        meetings_target: meetingsTarget
+      }
+    });
+
+    if (error) throw error;
+
+    showQuotaFeedback("Quota saved successfully!", "success");
+    
+    // Refresh the overview table
+    await loadAllQuotasTable(month);
+
+  } catch (error) {
+    console.error("Error saving quota:", error);
+    showQuotaFeedback(`Error saving quota: ${error.message}`, "error");
+  }
+}
+
+/**
+ * Load all quotas for the given month into the overview table
+ * @param {string} month - Month in YYYY-MM format
+ */
+async function loadAllQuotasTable(month) {
+  try {
+    if (!month) return;
+
+    // Fetch quotas for the month
+    const { data: quotas, error: quotasError } = await supabase
+      .from("quotas")
+      .select("*")
+      .eq("month", month);
+
+    if (quotasError) throw quotasError;
+
+    // If no profiles cached, fetch them
+    if (profilesCache.length === 0) {
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, full_name, email")
+        .eq("role", "repmeds");
+
+      if (profilesError) throw profilesError;
+      profilesCache = profiles || [];
+    }
+
+    // Render table
+    if (!quotas || quotas.length === 0) {
+      quotaElements.quotasTableBody.innerHTML = `
+        <tr>
+          <td colspan="6" class="empty-text">No quotas set for this month</td>
+        </tr>
+      `;
+      return;
+    }
+
+    quotaElements.quotasTableBody.innerHTML = quotas.map(quota => {
+      const profile = profilesCache.find(p => p.id === quota.rep_id);
+      const repName = profile?.full_name || profile?.email || "Unknown";
+
+      return `
+        <tr>
+          <td>${repName}</td>
+          <td>${quota.doctor_visits_target || 0}</td>
+          <td>${quota.pharmacy_calls_target || 0}</td>
+          <td>${quota.sample_distribution_target || 0}</td>
+          <td>${quota.meetings_target || 0}</td>
+          <td>
+            <button type="button" class="btn btn-sm btn-secondary edit-quota-btn" 
+                    data-rep-id="${quota.rep_id}" 
+                    data-month="${quota.month}">
+              Edit
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join("");
+
+    // Attach event listeners to edit buttons
+    quotaElements.quotasTableBody.querySelectorAll(".edit-quota-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const repId = btn.dataset.repId;
+        const month = btn.dataset.month;
+        
+        // Set the form values
+        quotaElements.repSelect.value = repId;
+        quotaElements.monthPicker.value = month;
+        
+        // Load the quota data
+        loadRepQuota(repId, month);
+      });
+    });
+
+  } catch (error) {
+    console.error("Error loading quotas table:", error);
+    quotaElements.quotasTableBody.innerHTML = `
+      <tr>
+        <td colspan="6" class="empty-text">Error loading quotas</td>
+      </tr>
+    `;
+  }
+}
+
+/**
+ * Show feedback message in the quota feedback area
+ * @param {string} message - The message to display
+ * @param {string} type - 'success' or 'error'
+ */
+function showQuotaFeedback(message, type) {
+  if (!quotaElements.quotaFeedback) return;
+
+  quotaElements.quotaFeedback.innerHTML = message;
+  quotaElements.quotaFeedback.className = `quota-feedback ${type}`;
+  quotaElements.quotaFeedback.style.display = "block";
+
+  // Auto-hide after 5 seconds
+  setTimeout(() => {
+    if (quotaElements.quotaFeedback) {
+      quotaElements.quotaFeedback.style.display = "none";
+    }
+  }, 5000);
+}
+
+/**
+ * Initialize quota management section
+ */
+function initQuotaManagement() {
+  // Set current month as default
+  const currentMonth = new Date().toISOString().slice(0, 7);
+  if (quotaElements.monthPicker) {
+    quotaElements.monthPicker.value = currentMonth;
+  }
+
+  // Load initial data
+  loadRepList();
+  loadAllQuotasTable(currentMonth);
+
+  // Setup event listeners
+  if (quotaElements.loadQuotaBtn) {
+    quotaElements.loadQuotaBtn.addEventListener("click", () => {
+      const repId = quotaElements.repSelect.value;
+      const month = quotaElements.monthPicker.value;
+      loadRepQuota(repId, month);
+    });
+  }
+
+  if (quotaElements.saveQuotaBtn) {
+    quotaElements.saveQuotaBtn.addEventListener("click", saveQuota);
+  }
+
+  if (quotaElements.monthPicker) {
+    quotaElements.monthPicker.addEventListener("change", () => {
+      const month = quotaElements.monthPicker.value;
+      loadAllQuotasTable(month);
+    });
+  }
+
+  if (quotaElements.repSelect) {
+    quotaElements.repSelect.addEventListener("change", () => {
+      const repId = quotaElements.repSelect.value;
+      const month = quotaElements.monthPicker.value;
+      if (repId && month) {
+        loadRepQuota(repId, month);
+      }
+    });
+  }
+}
+
+// Initialize quota management when DOM is ready
+document.addEventListener("DOMContentLoaded", initQuotaManagement);

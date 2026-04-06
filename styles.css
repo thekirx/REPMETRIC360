@@ -2134,3 +2134,288 @@ html {
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================
+   QUOTA MANAGEMENT UI STYLES
+   ============================================ */
+
+/* Quota Management Section - card styling matching admin cards */
+.quota-management-section {
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 25px;
+}
+
+.quota-management-section h2 {
+  font-family: "Special Gothic Expanded One", sans-serif;
+  font-size: 1.4rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.quota-management-section .section-subtitle {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+/* Quota Form Layout */
+.quota-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Flex row for rep selector and month picker side by side */
+.quota-form-row {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.quota-form-row .form-group {
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 0;
+}
+
+/* CSS grid for target inputs - 2 columns on desktop, 1 on mobile */
+.quota-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .quota-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Quota Target Input Groups */
+.quota-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quota-input-group label {
+  display: block;
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+.quota-input-group input,
+.quota-input-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: white;
+  color: #1f2937;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.quota-input-group input:focus,
+.quota-input-group select:focus {
+  outline: none;
+  border-color: #0d9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+}
+
+/* Action Buttons Row */
+.quota-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.quota-actions .btn {
+  padding: 10px 20px;
+  font-size: 0.95rem;
+}
+
+.quota-actions .btn-primary {
+  background-color: #20c997;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.quota-actions .btn-primary:hover {
+  background-color: #1baa80;
+}
+
+.quota-actions .btn-secondary {
+  background-color: transparent;
+  color: #0d9488;
+  border: 2px solid #0d9488;
+  padding: 10px 24px;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quota-actions .btn-secondary:hover {
+  background-color: #0d9488;
+  color: white;
+}
+
+/* Feedback/Status Area */
+.quota-feedback {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 20px;
+  font-size: 0.95rem;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  display: none;
+}
+
+.quota-feedback.show {
+  opacity: 1;
+  transform: translateY(0);
+  display: block;
+}
+
+.quota-feedback.success {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.quota-feedback.error {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+/* Quotas Overview Table */
+.quotas-table-wrapper {
+  overflow-x: auto;
+  margin-top: 10px;
+}
+
+.quotas-overview-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.quotas-overview-table thead {
+  background-color: #f9fafb;
+}
+
+.quotas-overview-table th,
+.quotas-overview-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.quotas-overview-table th {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.quotas-overview-table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.quotas-overview-table tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.quotas-overview-table tbody tr:hover {
+  background-color: #f3f4f6;
+}
+
+.quotas-overview-table td {
+  color: #4b5563;
+}
+
+/* Inline Edit Button */
+.btn-edit-quota {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background-color: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-edit-quota:hover {
+  background-color: #d97706;
+  transform: translateY(-1px);
+}
+
+.btn-edit-quota:active {
+  transform: translateY(0);
+}
+
+.btn-edit-quota .material-symbols-outlined {
+  font-size: 16px;
+}
+
+/* Responsive adjustments for quota management */
+@media (max-width: 768px) {
+  .quota-management-section {
+    padding: 20px;
+  }
+
+  .quota-form-row {
+    flex-direction: column;
+  }
+
+  .quota-form-row .form-group {
+    min-width: 100%;
+  }
+
+  .quota-actions {
+    flex-direction: column;
+  }
+
+  .quota-actions .btn {
+    width: 100%;
+  }
+
+  .quotas-table-wrapper {
+    border-radius: 8px;
+    box-shadow: inset -5px 0 5px -5px rgba(0,0,0,0.1);
+  }
+
+  .quotas-overview-table th,
+  .quotas-overview-table td {
+    padding: 12px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .btn-edit-quota {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+}

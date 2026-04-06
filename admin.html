@@ -342,6 +342,84 @@
           </div>
         </div>
 
+        <!-- Quota Management Section -->
+        <div class="card">
+          <div class="card-header">
+            <h2>
+              <span class="material-symbols-outlined">edit_note</span>
+              Quota Management
+            </h2>
+          </div>
+          
+          <!-- Quota Assignment Form -->
+          <div class="quota-form-container">
+            <div class="form-group">
+              <label for="quota-rep-select">Select RepMed</label>
+              <select id="quota-rep-select" class="form-select">
+                <option value="">Select a RepMed...</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="quota-month-picker">Month</label>
+              <input type="month" id="quota-month-picker" class="form-input">
+            </div>
+            
+            <div class="quota-targets-grid">
+              <div class="form-group">
+                <label for="doctor-visits-target">Doctor Visits Target</label>
+                <input type="number" id="doctor-visits-target" class="form-input" min="0" placeholder="0">
+              </div>
+              <div class="form-group">
+                <label for="pharmacy-calls-target">Pharmacy Calls Target</label>
+                <input type="number" id="pharmacy-calls-target" class="form-input" min="0" placeholder="0">
+              </div>
+              <div class="form-group">
+                <label for="sample-distribution-target">Sample Distribution Target</label>
+                <input type="number" id="sample-distribution-target" class="form-input" min="0" placeholder="0">
+              </div>
+              <div class="form-group">
+                <label for="meetings-target">Meetings Target</label>
+                <input type="number" id="meetings-target" class="form-input" min="0" placeholder="0">
+              </div>
+            </div>
+            
+            <div class="quota-form-actions">
+              <button type="button" id="load-quota-btn" class="btn btn-secondary">Load Current Quotas</button>
+              <button type="button" id="save-quota-btn" class="btn btn-primary">Save Quotas</button>
+            </div>
+            
+            <div id="quota-feedback" class="quota-feedback"></div>
+          </div>
+        </div>
+        
+        <!-- All Reps Quota Overview Table -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Current Month Quotas Overview</h2>
+          </div>
+          
+          <div class="table-container">
+            <table class="reports-table quotas-overview-table">
+              <thead>
+                <tr>
+                  <th>Rep Name</th>
+                  <th>Doctor Visits</th>
+                  <th>Pharmacy Calls</th>
+                  <th>Sample Distribution</th>
+                  <th>Meetings</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="quotas-table-body">
+                <tr>
+                  <td colspan="6" class="loading-text">No quotas set for this month</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         <!-- Inventory / Materials Monitoring -->
         <div class="card">
           <h2>Materials & Inventory</h2>
