@@ -1,5 +1,5 @@
 // Auth helpers para sa session checking at logout
-import { supabase } from "./supabaseClient.js";
+import { supabase } from "./supabaseclient.js";
 
 export async function getSession() {
   const { data } = await supabase.auth.getSession();
