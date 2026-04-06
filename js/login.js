@@ -1,5 +1,5 @@
 // Login form handler
-import { supabase } from "./supabaseClient.js";
+import { supabase } from "./supabaseclient.js";
 
 // Toggle password visibility
 const toggleBtn = document.querySelector(".password-toggle");
