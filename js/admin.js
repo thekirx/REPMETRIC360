@@ -1,6 +1,6 @@
 // Admin Dashboard - Field Force Management Command Center
 // Admin-only access with role-based authorization
-import { supabase } from "./supabaseClient.js";
+import { supabase } from "./supabaseclient.js";
 import { requireAdmin, logout, getUserRole } from "./auth.js";
 
 // DOM Elements
