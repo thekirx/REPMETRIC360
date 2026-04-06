@@ -1,7 +1,7 @@
 // app.js - Main application logic for RepMetric 360
 // Handles auth state, data routing, and shared utilities
 
-import { supabase } from "./supabaseClient.js";
+import { supabase } from "./supabaseclient.js";
 import { requireAuth, getUser, getUserRole, isAdmin } from "./auth.js";
 
 // ============================================
