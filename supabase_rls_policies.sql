@@ -30,10 +30,7 @@ CREATE POLICY "Admin can view all profiles"
   ON profiles FOR SELECT
   TO authenticated
   USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
+    (auth.jwt()->'user_metadata'->>'role' = 'admin')
   );
 
 -- Trigger to auto-create profile on signup
@@ -71,10 +68,7 @@ CREATE POLICY "Admin can manage doctors"
   ON doctors FOR ALL
   TO authenticated
   USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
+    (auth.jwt()->'user_metadata'->>'role' = 'admin')
   );
 
 -- ============================================
@@ -110,10 +104,7 @@ CREATE POLICY "Admin can view all visits"
   ON visits FOR SELECT
   TO authenticated
   USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
+    (auth.jwt()->'user_metadata'->>'role' = 'admin')
   );
 
 -- ============================================
@@ -149,10 +140,7 @@ CREATE POLICY "Admin can view all reports"
   ON reports FOR SELECT
   TO authenticated
   USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
+    (auth.jwt()->'user_metadata'->>'role' = 'admin')
   );
 
 -- ============================================
@@ -170,10 +158,7 @@ CREATE POLICY "Admin can manage quotas"
   ON quotas FOR ALL
   TO authenticated
   USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
+    (auth.jwt()->'user_metadata'->>'role' = 'admin')
   );
 
 -- ============================================
@@ -226,8 +211,5 @@ CREATE POLICY "Admin can view all activities"
   ON activities FOR SELECT
   TO authenticated
   USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
+    (auth.jwt()->'user_metadata'->>'role' = 'admin')
   );

@@ -63,6 +63,17 @@ export async function getUserRole() {
   }
   
   console.log("[getUserRole] Returning role from profiles table:", data.role);
+  
+  // Sync role to user_metadata para sa faster future lookups
+  try {
+    await supabase.auth.updateUser({
+      data: { role: data.role }
+    });
+    console.log("[getUserRole] Synced role to user_metadata:", data.role);
+  } catch (syncError) {
+    console.error("[getUserRole] Failed to sync role to user_metadata:", syncError);
+  }
+  
   return data.role?.toLowerCase() || "repmeds";
 }
 

@@ -1,4 +1,4 @@
-import{r as D,u as S,s as m}from"./auth-C6cLn3GG.js";/* empty css               */import"https://esm.sh/@supabase/supabase-js@2";const h=document.querySelector(".activity-feed"),E=document.querySelector(".dashboard-right .card:first-child");async function T(){const i=await D();i&&(await S(),await Promise.all([$(i.id),b(i.id)]),L(i.id))}function C(i){return i?i.split("-").map(a=>a.charAt(0).toUpperCase()+a.slice(1)).join(" "):"Activity"}async function $(i){h.innerHTML=`
+import{r as D,u as S,s as m}from"./auth-Bsa9Dh2U.js";/* empty css               */import"https://esm.sh/@supabase/supabase-js@2";const h=document.querySelector(".activity-feed"),E=document.querySelector(".dashboard-right .card:first-child");async function T(){const i=await D();i&&(await S(),await Promise.all([$(i.id),b(i.id)]),L(i.id))}function C(i){return i?i.split("-").map(a=>a.charAt(0).toUpperCase()+a.slice(1)).join(" "):"Activity"}async function $(i){h.innerHTML=`
     <div class="activity-item">
       <span class="activity-detail">Loading activities...</span>
     </div>
