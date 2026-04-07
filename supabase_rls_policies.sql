@@ -2,12 +2,94 @@
 -- RepMetric 360 - Supabase RLS Policies
 -- ============================================
 
+-- ============================================
+-- DOCTORS TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS doctors (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  specialty TEXT,
+  clinic_location TEXT,
+  clinic_name TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ============================================
+-- VISITS TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS visits (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  rep_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  doctor_id UUID REFERENCES doctors(id) ON DELETE SET NULL,
+  scheduled_date TIMESTAMPTZ NOT NULL,
+  status TEXT NOT NULL DEFAULT 'scheduled'
+    CHECK (status IN ('scheduled', 'completed', 'missed', 'cancelled')),
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_visits_rep_id ON visits(rep_id);
+CREATE INDEX IF NOT EXISTS idx_visits_scheduled_date ON visits(scheduled_date);
+CREATE INDEX IF NOT EXISTS idx_visits_status ON visits(status);
+
+-- ============================================
+-- REPORTS TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS reports (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  rep_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  visit_id UUID REFERENCES visits(id) ON DELETE CASCADE,
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_reports_rep_id ON reports(rep_id);
+CREATE INDEX IF NOT EXISTS idx_reports_created_at ON reports(created_at);
+
+-- ============================================
+-- QUOTAS TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS quotas (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  rep_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  month TEXT NOT NULL,
+  doctor_visits_target INTEGER DEFAULT 10,
+  doctor_visits_actual INTEGER DEFAULT 0,
+  pharmacy_calls_target INTEGER DEFAULT 15,
+  pharmacy_calls_actual INTEGER DEFAULT 0,
+  sample_distribution_target INTEGER DEFAULT 20,
+  sample_distribution_actual INTEGER DEFAULT 0,
+  meetings_target INTEGER DEFAULT 10,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(rep_id, month)
+);
+
+CREATE INDEX IF NOT EXISTS idx_quotas_rep_id ON quotas(rep_id);
+CREATE INDEX IF NOT EXISTS idx_quotas_month ON quotas(month);
+
+-- ============================================
+-- SAMPLE DISTRIBUTIONS TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS sample_distributions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  rep_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  sample_name TEXT,
+  quantity INTEGER DEFAULT 0,
+  distributed_to TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Enable RLS on all tables
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE doctors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE visits ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reports ENABLE ROW LEVEL SECURITY;
 ALTER TABLE quotas ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sample_distributions ENABLE ROW LEVEL SECURITY;
 
 -- ============================================
 -- PROFILES TABLE POLICIES
