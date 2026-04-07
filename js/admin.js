@@ -796,40 +796,41 @@ let profilesCache = [];
  * Load all RepMeds into the dropdown
  */
 async function loadRepList() {
-  try {
-    const { data: profiles, error } = await supabase
-      .from("profiles")
-      .select("id, full_name, email")
-      .eq("role", "repmeds")
-      .order("full_name", { ascending: true });
+  const select = document.getElementById("quota-rep-select");
+  if (!select) return;
 
-    if (error) throw error;
+  // Clear existing options except placeholder
+  select.innerHTML = '<option value="">Loading RepMeds...</option>';
 
-    profilesCache = profiles || [];
+  console.log("[loadRepList] Fetching repmeds from profiles table...");
 
-    // Keep the default option and add rep options
-    const defaultOption = quotaElements.repSelect.querySelector('option[value=""]');
-    quotaElements.repSelect.innerHTML = '';
-    if (defaultOption) {
-      quotaElements.repSelect.appendChild(defaultOption);
-    } else {
-      const option = document.createElement("option");
-      option.value = "";
-      option.textContent = "Select a RepMed...";
-      quotaElements.repSelect.appendChild(option);
-    }
+  const { data: reps, error } = await supabase
+    .from("profiles")
+    .select("id, full_name, email")
+    .eq("role", "repmeds")
+    .order("full_name", { ascending: true });
 
-    profilesCache.forEach(profile => {
-      const option = document.createElement("option");
-      option.value = profile.id;
-      option.textContent = profile.full_name || profile.email || "Unknown";
-      quotaElements.repSelect.appendChild(option);
-    });
-
-  } catch (error) {
-    console.error("Error loading rep list:", error);
-    showQuotaFeedback("Failed to load RepMed list", "error");
+  if (error) {
+    console.error("[loadRepList] Error fetching repmeds:", error);
+    select.innerHTML = '<option value="" disabled>Error loading RepMeds</option>';
+    return;
   }
+
+  console.log("[loadRepList] Found", reps?.length || 0, "repmeds");
+
+  if (!reps || reps.length === 0) {
+    select.innerHTML = '<option value="" disabled>No RepMeds found</option>';
+    return;
+  }
+
+  // Build options
+  select.innerHTML = '<option value="">Select a RepMed...</option>';
+  reps.forEach(rep => {
+    const option = document.createElement("option");
+    option.value = rep.id;
+    option.textContent = rep.full_name || rep.email || "Unknown Rep";
+    select.appendChild(option);
+  });
 }
 
 /**

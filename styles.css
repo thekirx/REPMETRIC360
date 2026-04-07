@@ -2418,4 +2418,56 @@ html {
     padding: 5px 10px;
     font-size: 0.8rem;
   }
+
+  /* Quota Form Layout Fixes */
+  .quota-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .quota-targets-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .quota-targets-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .quota-form-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .quota-form-actions .btn {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  /* Form Input and Select Consistency */
+  .form-input,
+  .form-select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #1f2937;
+    background-color: #fff;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  .form-input:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: #0d9488;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+  }
 }
