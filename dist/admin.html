@@ -9,9 +9,9 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   
   <!-- css file natin -->
-  <script type="module" crossorigin src="/assets/admin-Cb98qGCq.js"></script>
+  <script type="module" crossorigin src="/assets/admin-BaKJ-YxO.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/auth-lOpszQbR.js">
-  <link rel="stylesheet" crossorigin href="/assets/styles-CSRkh7k9.css">
+  <link rel="stylesheet" crossorigin href="/assets/styles-BPfNouuE.css">
 </head>
 <!-- 
   Admin Dashboard - Management command center
@@ -158,308 +158,298 @@
 
     <!-- Main Admin Grid -->
     <div class="admin-grid">
-      <!-- Left Column -->
-      <div class="admin-left">
-        <!-- Representative Monitoring Panel -->
-        <div class="card">
-          <div class="card-header">
-            <h2>Representative Monitoring</h2>
-            <div class="search-box">
-              <input type="text" id="repSearch" placeholder="Search reps...">
-              <span class="material-symbols-outlined">search</span>
-            </div>
-          </div>
-          <div class="table-container">
-            <table class="reports-table rep-monitoring-table">
-              <thead>
-                <tr>
-                  <th>Representative</th>
-                  <th>Territory</th>
-                  <th>Status</th>
-                  <th>Visits Today</th>
-                  <th>Quota Progress</th>
-                  <th>Last Activity</th>
-                </tr>
-              </thead>
-              <tbody id="repMonitoringTable">
-                <tr>
-                  <td colspan="6" class="loading-text">Loading representatives...</td>
-                </tr>
-              </tbody>
-            </table>
+      <!-- Row 1: Representative Monitoring (wide) | Alerts & Notifications (narrow) -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Representative Monitoring</h2>
+          <div class="search-box">
+            <input type="text" id="repSearch" placeholder="Search reps...">
+            <span class="material-symbols-outlined">search</span>
           </div>
         </div>
-
-        <!-- Performance Analytics Section -->
-        <div class="card">
-          <h2>Performance Analytics</h2>
-          <div class="analytics-grid">
-            <div class="analytics-item">
-              <h4>Top Performers</h4>
-              <div class="top-performers-list" id="topPerformers">
-                <div class="loading-text">Loading...</div>
-              </div>
-            </div>
-            <div class="analytics-item">
-              <h4>Underperforming</h4>
-              <div class="underperformers-list" id="underperformers">
-                <div class="loading-text">Loading...</div>
-              </div>
-            </div>
-          </div>
-          <div class="analytics-summary">
-            <div class="analytics-metric">
-              <span class="metric-value" id="visitCompletionRate">--%</span>
-              <span class="metric-label">Visit Completion Rate</span>
-            </div>
-            <div class="analytics-metric">
-              <span class="metric-value" id="reportSubmissionTrend">--%</span>
-              <span class="metric-label">Report Submission Trend</span>
-            </div>
-          </div>
+        <div class="table-container">
+          <table class="reports-table rep-monitoring-table">
+            <thead>
+              <tr>
+                <th>Representative</th>
+                <th>Territory</th>
+                <th>Status</th>
+                <th>Visits Today</th>
+                <th>Quota Progress</th>
+                <th>Last Activity</th>
+              </tr>
+            </thead>
+            <tbody id="repMonitoringTable">
+              <tr>
+                <td colspan="6" class="loading-text">Loading representatives...</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </div>
 
-        <!-- Recent Activity / Reports Feed -->
-        <div class="card">
-          <div class="card-header">
-            <h2>Recent Field Reports</h2>
-            <a href="reports.html" class="view-all-link">View All</a>
+      <div class="card alerts-card">
+        <h2>
+          <span class="material-symbols-outlined">notifications_active</span>
+          Alerts & Notifications
+        </h2>
+        <div class="alerts-list" id="alertsList">
+          <div class="alert-item alert-warning">
+            <span class="material-symbols-outlined">warning</span>
+            <div class="alert-content">
+              <strong>Missing Daily Reports</strong>
+              <span>3 reps haven't submitted reports</span>
+            </div>
           </div>
-          <div class="activity-feed admin-activity-feed" id="recentReportsFeed">
-            <div class="activity-item">
-              <span class="activity-detail">Loading recent reports...</span>
+          <div class="alert-item alert-info">
+            <span class="material-symbols-outlined">schedule</span>
+            <div class="alert-content">
+              <strong>Schedule Conflicts</strong>
+              <span>2 overlapping appointments detected</span>
+            </div>
+          </div>
+          <div class="alert-item alert-success">
+            <span class="material-symbols-outlined">check_circle</span>
+            <div class="alert-content">
+              <strong>Quota Milestone</strong>
+              <span>Team reached 75% monthly target</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Right Column -->
-      <div class="admin-right">
-        <!-- Alerts / Notifications Panel -->
-        <div class="card alerts-card">
+      <!-- Row 2: Performance Analytics (wide) | Today's Schedule Overview (narrow) -->
+      <div class="card">
+        <h2>Performance Analytics</h2>
+        <div class="analytics-grid">
+          <div class="analytics-item">
+            <h4>Top Performers</h4>
+            <div class="top-performers-list" id="topPerformers">
+              <div class="loading-text">Loading...</div>
+            </div>
+          </div>
+          <div class="analytics-item">
+            <h4>Underperforming</h4>
+            <div class="underperformers-list" id="underperformers">
+              <div class="loading-text">Loading...</div>
+            </div>
+          </div>
+        </div>
+        <div class="analytics-summary">
+          <div class="analytics-metric">
+            <span class="metric-value" id="visitCompletionRate">--%</span>
+            <span class="metric-label">Visit Completion Rate</span>
+          </div>
+          <div class="analytics-metric">
+            <span class="metric-value" id="reportSubmissionTrend">--%</span>
+            <span class="metric-label">Report Submission Trend</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Today's Schedule Overview</h2>
+        <div class="schedule-stats">
+          <div class="schedule-stat">
+            <span class="stat-value" id="todayAppointments">--</span>
+            <span class="stat-label">Appointments</span>
+          </div>
+          <div class="schedule-stat">
+            <span class="stat-value" id="missedAppointments">--</span>
+            <span class="stat-label">Missed</span>
+          </div>
+          <div class="schedule-stat">
+            <span class="stat-value" id="completedAppointments">--</span>
+            <span class="stat-label">Completed</span>
+          </div>
+        </div>
+        <div class="upcoming-schedules" id="upcomingSchedulesList">
+          <h4>Upcoming Today</h4>
+          <div class="schedule-item">
+            <span class="schedule-time">02:00 PM</span>
+            <span class="schedule-rep">Juan Dela Cruz</span>
+            <span class="schedule-detail">Dr. Reyes - Makati Med</span>
+          </div>
+          <div class="schedule-item">
+            <span class="schedule-time">04:30 PM</span>
+            <span class="schedule-rep">Maria Santos</span>
+            <span class="schedule-detail">Watsons - SM North</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: Recent Field Reports (wide) | Quota Tracking (narrow) -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Recent Field Reports</h2>
+          <a href="reports.html" class="view-all-link">View All</a>
+        </div>
+        <div class="activity-feed admin-activity-feed" id="recentReportsFeed">
+          <div class="activity-item">
+            <span class="activity-detail">Loading recent reports...</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Quota Tracking</h2>
+        <div class="quota-tracking-list" id="quotaTrackingList">
+          <div class="quota-track-item">
+            <div class="quota-track-header">
+              <span class="quota-rep-name">Team Average</span>
+              <span class="quota-percentage">78%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill medium" style="width: 78%"></div>
+            </div>
+          </div>
+          <div class="quota-track-item">
+            <div class="quota-track-header">
+              <span class="quota-rep-name">Doctor Visits Target</span>
+              <span class="quota-percentage">85%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill high" style="width: 85%"></div>
+            </div>
+          </div>
+          <div class="quota-track-item">
+            <div class="quota-track-header">
+              <span class="quota-rep-name">Pharmacy Calls Target</span>
+              <span class="quota-percentage">72%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill medium" style="width: 72%"></div>
+            </div>
+          </div>
+          <div class="quota-track-item">
+            <div class="quota-track-header">
+              <span class="quota-rep-name">Sample Distribution</span>
+              <span class="quota-percentage">91%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill high" style="width: 91%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="info-box warning" id="quotaAlerts">
+          <strong>Attention:</strong> 2 reps falling behind monthly target
+        </div>
+      </div>
+
+      <!-- Row 4: Quota Management (wide) | Current Month Quotas Overview (narrow) -->
+      <div class="card">
+        <div class="card-header">
           <h2>
-            <span class="material-symbols-outlined">notifications_active</span>
-            Alerts & Notifications
+            <span class="material-symbols-outlined">edit_note</span>
+            Quota Management
           </h2>
-          <div class="alerts-list" id="alertsList">
-            <div class="alert-item alert-warning">
-              <span class="material-symbols-outlined">warning</span>
-              <div class="alert-content">
-                <strong>Missing Daily Reports</strong>
-                <span>3 reps haven't submitted reports</span>
-              </div>
-            </div>
-            <div class="alert-item alert-info">
-              <span class="material-symbols-outlined">schedule</span>
-              <div class="alert-content">
-                <strong>Schedule Conflicts</strong>
-                <span>2 overlapping appointments detected</span>
-              </div>
-            </div>
-            <div class="alert-item alert-success">
-              <span class="material-symbols-outlined">check_circle</span>
-              <div class="alert-content">
-                <strong>Quota Milestone</strong>
-                <span>Team reached 75% monthly target</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Scheduling Overview -->
-        <div class="card">
-          <h2>Today's Schedule Overview</h2>
-          <div class="schedule-stats">
-            <div class="schedule-stat">
-              <span class="stat-value" id="todayAppointments">--</span>
-              <span class="stat-label">Appointments</span>
-            </div>
-            <div class="schedule-stat">
-              <span class="stat-value" id="missedAppointments">--</span>
-              <span class="stat-label">Missed</span>
-            </div>
-            <div class="schedule-stat">
-              <span class="stat-value" id="completedAppointments">--</span>
-              <span class="stat-label">Completed</span>
-            </div>
-          </div>
-          <div class="upcoming-schedules" id="upcomingSchedulesList">
-            <h4>Upcoming Today</h4>
-            <div class="schedule-item">
-              <span class="schedule-time">02:00 PM</span>
-              <span class="schedule-rep">Juan Dela Cruz</span>
-              <span class="schedule-detail">Dr. Reyes - Makati Med</span>
-            </div>
-            <div class="schedule-item">
-              <span class="schedule-time">04:30 PM</span>
-              <span class="schedule-rep">Maria Santos</span>
-              <span class="schedule-detail">Watsons - SM North</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Quota and Target Management -->
-        <div class="card">
-          <h2>Quota Tracking</h2>
-          <div class="quota-tracking-list" id="quotaTrackingList">
-            <div class="quota-track-item">
-              <div class="quota-track-header">
-                <span class="quota-rep-name">Team Average</span>
-                <span class="quota-percentage">78%</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill medium" style="width: 78%"></div>
-              </div>
-            </div>
-            <div class="quota-track-item">
-              <div class="quota-track-header">
-                <span class="quota-rep-name">Doctor Visits Target</span>
-                <span class="quota-percentage">85%</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill high" style="width: 85%"></div>
-              </div>
-            </div>
-            <div class="quota-track-item">
-              <div class="quota-track-header">
-                <span class="quota-rep-name">Pharmacy Calls Target</span>
-                <span class="quota-percentage">72%</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill medium" style="width: 72%"></div>
-              </div>
-            </div>
-            <div class="quota-track-item">
-              <div class="quota-track-header">
-                <span class="quota-rep-name">Sample Distribution</span>
-                <span class="quota-percentage">91%</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill high" style="width: 91%"></div>
-              </div>
-            </div>
-          </div>
-          <div class="info-box warning" id="quotaAlerts">
-            <strong>Attention:</strong> 2 reps falling behind monthly target
-          </div>
-        </div>
-
-        <!-- Quota Management Section -->
-        <div class="card">
-          <div class="card-header">
-            <h2>
-              <span class="material-symbols-outlined">edit_note</span>
-              Quota Management
-            </h2>
-          </div>
-          
-          <!-- Quota Assignment Form -->
-          <div class="quota-form-container">
-            <div class="form-group">
-              <label for="quota-rep-select">Select RepMed</label>
-              <select id="quota-rep-select" class="form-select">
-                <option value="">Select a RepMed...</option>
-              </select>
-            </div>
-            
-            <div class="form-group">
-              <label for="quota-month-picker">Month</label>
-              <input type="month" id="quota-month-picker" class="form-input">
-            </div>
-            
-            <div class="quota-targets-grid">
-              <div class="form-group">
-                <label for="doctor-visits-target">Doctor Visits Target</label>
-                <input type="number" id="doctor-visits-target" class="form-input" min="0" placeholder="0">
-              </div>
-              <div class="form-group">
-                <label for="pharmacy-calls-target">Pharmacy Calls Target</label>
-                <input type="number" id="pharmacy-calls-target" class="form-input" min="0" placeholder="0">
-              </div>
-              <div class="form-group">
-                <label for="sample-distribution-target">Sample Distribution Target</label>
-                <input type="number" id="sample-distribution-target" class="form-input" min="0" placeholder="0">
-              </div>
-              <div class="form-group">
-                <label for="meetings-target">Meetings Target</label>
-                <input type="number" id="meetings-target" class="form-input" min="0" placeholder="0">
-              </div>
-            </div>
-            
-            <div class="quota-form-actions">
-              <button type="button" id="load-quota-btn" class="btn btn-secondary">Load Current Quotas</button>
-              <button type="button" id="save-quota-btn" class="btn btn-primary">Save Quotas</button>
-            </div>
-            
-            <div id="quota-feedback" class="quota-feedback"></div>
-          </div>
         </div>
         
-        <!-- All Reps Quota Overview Table -->
-        <div class="card">
-          <div class="card-header">
-            <h2>Current Month Quotas Overview</h2>
+        <!-- Quota Assignment Form -->
+        <div class="quota-form-container">
+          <div class="form-group">
+            <label for="quota-rep-select">Select RepMed</label>
+            <select id="quota-rep-select" class="form-select">
+              <option value="">Select a RepMed...</option>
+            </select>
           </div>
           
-          <div class="table-container">
-            <table class="reports-table quotas-overview-table">
-              <thead>
-                <tr>
-                  <th>Rep Name</th>
-                  <th>Doctor Visits</th>
-                  <th>Pharmacy Calls</th>
-                  <th>Sample Distribution</th>
-                  <th>Meetings</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="quotas-table-body">
-                <tr>
-                  <td colspan="6" class="loading-text">No quotas set for this month</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="form-group">
+            <label for="quota-month-picker">Month</label>
+            <input type="month" id="quota-month-picker" class="form-input">
+          </div>
+          
+          <div class="quota-targets-grid">
+            <div class="form-group">
+              <label for="doctor-visits-target">Doctor Visits Target</label>
+              <input type="number" id="doctor-visits-target" class="form-input" min="0" placeholder="0">
+            </div>
+            <div class="form-group">
+              <label for="pharmacy-calls-target">Pharmacy Calls Target</label>
+              <input type="number" id="pharmacy-calls-target" class="form-input" min="0" placeholder="0">
+            </div>
+            <div class="form-group">
+              <label for="sample-distribution-target">Sample Distribution Target</label>
+              <input type="number" id="sample-distribution-target" class="form-input" min="0" placeholder="0">
+            </div>
+            <div class="form-group">
+              <label for="meetings-target">Meetings Target</label>
+              <input type="number" id="meetings-target" class="form-input" min="0" placeholder="0">
+            </div>
+          </div>
+          
+          <div class="quota-form-actions">
+            <button type="button" id="load-quota-btn" class="btn btn-secondary">Load Current Quotas</button>
+            <button type="button" id="save-quota-btn" class="btn btn-primary">Save Quotas</button>
+          </div>
+          
+          <div id="quota-feedback" class="quota-feedback"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Current Month Quotas Overview</h2>
+        </div>
+        
+        <div class="table-container">
+          <table class="reports-table quotas-overview-table">
+            <thead>
+              <tr>
+                <th>Rep Name</th>
+                <th>Doctor Visits</th>
+                <th>Pharmacy Calls</th>
+                <th>Sample Distribution</th>
+                <th>Meetings</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="quotas-table-body">
+              <tr>
+                <td colspan="6" class="loading-text">No quotas set for this month</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Row 5: Materials & Inventory (full width) -->
+      <div class="card full-width">
+        <h2>Materials & Inventory</h2>
+        <div class="inventory-list" id="inventoryList">
+          <div class="inventory-item">
+            <div class="inventory-info">
+              <span class="material-symbols-outlined">medication</span>
+              <div>
+                <strong>Biogesic Samples</strong>
+                <span>1,250 units distributed</span>
+              </div>
+            </div>
+            <span class="inventory-trend up">+12%</span>
+          </div>
+          <div class="inventory-item">
+            <div class="inventory-info">
+              <span class="material-symbols-outlined">medication</span>
+              <div>
+                <strong>Neozep Samples</strong>
+                <span>980 units distributed</span>
+              </div>
+            </div>
+            <span class="inventory-trend up">+8%</span>
+          </div>
+          <div class="inventory-item">
+            <div class="inventory-info">
+              <span class="material-symbols-outlined">campaign</span>
+              <div>
+                <strong>Promotional Materials</strong>
+                <span>450 sets distributed</span>
+              </div>
+            </div>
+            <span class="inventory-trend down">-3%</span>
           </div>
         </div>
-
-        <!-- Inventory / Materials Monitoring -->
-        <div class="card">
-          <h2>Materials & Inventory</h2>
-          <div class="inventory-list" id="inventoryList">
-            <div class="inventory-item">
-              <div class="inventory-info">
-                <span class="material-symbols-outlined">medication</span>
-                <div>
-                  <strong>Biogesic Samples</strong>
-                  <span>1,250 units distributed</span>
-                </div>
-              </div>
-              <span class="inventory-trend up">+12%</span>
-            </div>
-            <div class="inventory-item">
-              <div class="inventory-info">
-                <span class="material-symbols-outlined">medication</span>
-                <div>
-                  <strong>Neozep Samples</strong>
-                  <span>980 units distributed</span>
-                </div>
-              </div>
-              <span class="inventory-trend up">+8%</span>
-            </div>
-            <div class="inventory-item">
-              <div class="inventory-info">
-                <span class="material-symbols-outlined">campaign</span>
-                <div>
-                  <strong>Promotional Materials</strong>
-                  <span>450 sets distributed</span>
-                </div>
-              </div>
-              <span class="inventory-trend down">-3%</span>
-            </div>
-          </div>
-          <div class="info-box success">
-            <strong>Stock Status:</strong> All materials adequately stocked
-          </div>
+        <div class="info-box success">
+          <strong>Stock Status:</strong> All materials adequately stocked
         </div>
       </div>
     </div>
