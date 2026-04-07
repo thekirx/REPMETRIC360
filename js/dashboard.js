@@ -24,21 +24,55 @@ async function initDashboard() {
   setupActivityForm(user.id);
 }
 
-// Fetch and render recent activities
-async function loadRecentActivities(userId) {
-  const { data: visits, error } = await supabase
-    .from("visits")
-    .select("id, scheduled_date, status, notes, doctors(name, specialty, clinic_location)")
-    .eq("rep_id", userId)
-    .order("scheduled_date", { ascending: false })
-    .limit(5);
+// Helper function to format activity type for display
+function formatActivityType(type) {
+  if (!type) return "Activity";
+  return type
+    .split("-")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
 
-  if (error) {
-    console.error("Error loading activities:", error);
-    return;
+// Fetch and render recent activities from both activities and visits tables
+async function loadRecentActivities(userId) {
+  // Show loading state
+  activityFeedEl.innerHTML = `
+    <div class="activity-item">
+      <span class="activity-detail">Loading activities...</span>
+    </div>
+  `;
+
+  // Query both tables in parallel
+  const [activitiesResult, visitsResult] = await Promise.all([
+    // Query activities table for user-logged activities
+    supabase
+      .from("activities")
+      .select("id, activity_type, details, location, created_at")
+      .eq("rep_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(10),
+    
+    // Query visits table for scheduled visits with doctor info
+    supabase
+      .from("visits")
+      .select("id, scheduled_date, status, notes, doctors(name, specialty, clinic_location)")
+      .eq("rep_id", userId)
+      .order("scheduled_date", { ascending: false })
+      .limit(10)
+  ]);
+
+  if (activitiesResult.error) {
+    console.error("Error loading activities:", activitiesResult.error);
+  }
+  if (visitsResult.error) {
+    console.error("Error loading visits:", visitsResult.error);
   }
 
-  if (!visits || visits.length === 0) {
+  const activities = activitiesResult.data || [];
+  const visits = visitsResult.data || [];
+
+  // If no activities or visits, show empty state
+  if (activities.length === 0 && visits.length === 0) {
     activityFeedEl.innerHTML = `
       <div class="activity-item">
         <span class="activity-detail">No activities yet. Log your first activity!</span>
@@ -47,24 +81,52 @@ async function loadRecentActivities(userId) {
     return;
   }
 
+  // Combine and normalize both types of activities
+  const combinedActivities = [
+    // Map activities table items
+    ...activities.map(activity => ({
+      id: activity.id,
+      type: "activity",
+      date: new Date(activity.created_at),
+      activityType: formatActivityType(activity.activity_type),
+      detail: activity.details || "",
+      location: activity.location || ""
+    })),
+    
+    // Map visits table items
+    ...visits.map(visit => {
+      const doctorName = visit.doctors?.name || "Unknown Doctor";
+      const location = visit.doctors?.clinic_location || "";
+      const activityType = visit.doctors?.specialty ? "Doctor Visit" : "Pharmacy Call";
+      
+      return {
+        id: visit.id,
+        type: "visit",
+        date: new Date(visit.scheduled_date),
+        activityType: activityType,
+        detail: `${doctorName}${location ? " - " + location : ""}`,
+        location: location
+      };
+    })
+  ];
+
+  // Sort by date (most recent first) and limit to 10
+  combinedActivities.sort((a, b) => b.date - a.date);
+  const recentActivities = combinedActivities.slice(0, 10);
+
   // Render activities
-  activityFeedEl.innerHTML = visits.map(visit => {
-    const date = new Date(visit.scheduled_date);
-    const timeStr = date.toLocaleTimeString("en-US", { 
+  activityFeedEl.innerHTML = recentActivities.map(activity => {
+    const timeStr = activity.date.toLocaleTimeString("en-US", { 
       hour: "2-digit", 
       minute: "2-digit",
       hour12: true 
     });
     
-    const doctorName = visit.doctors?.name || "Unknown Doctor";
-    const location = visit.doctors?.clinic_location || "";
-    const activityType = visit.doctors?.specialty ? "Doctor Visit" : "Pharmacy Call";
-    
     return `
       <div class="activity-item">
         <span class="activity-time">${timeStr}</span>
-        <span class="activity-type">${activityType}</span>
-        <span class="activity-detail">${doctorName}${location ? " - " + location : ""}</span>
+        <span class="activity-type">${activity.activityType}</span>
+        <span class="activity-detail">${activity.detail}${activity.location && !activity.detail.includes(activity.location) ? " - " + activity.location : ""}</span>
       </div>
     `;
   }).join("");
@@ -87,24 +149,45 @@ async function loadProgressReporting(userId) {
     return;
   }
 
-  // Get completed counts for current month
+  // Get activity counts for current month from activities table
   const startOfMonth = new Date();
   startOfMonth.setDate(1);
   startOfMonth.setHours(0, 0, 0, 0);
+  const endOfMonth = new Date();
+  endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+  endOfMonth.setDate(0);
+  endOfMonth.setHours(23, 59, 59, 999);
 
-  const { data: visits, error: visitsError } = await supabase
-    .from("visits")
-    .select("id, status")
+  // Query activities table for counts by type
+  const { data: activities, error: activitiesError } = await supabase
+    .from("activities")
+    .select("activity_type")
     .eq("rep_id", userId)
-    .gte("scheduled_date", startOfMonth.toISOString())
-    .eq("status", "completed");
+    .gte("created_at", startOfMonth.toISOString())
+    .lte("created_at", endOfMonth.toISOString());
 
-  if (visitsError) {
-    console.error("Error loading visits:", visitsError);
-    return;
+  if (activitiesError) {
+    console.error("Error loading activities:", activitiesError);
   }
 
-  const completedVisits = visits?.length || 0;
+  // Count activities by type
+  let doctorVisitsCount = 0;
+  let pharmacyCallsCount = 0;
+  let sampleDistributionCount = 0;
+
+  (activities || []).forEach(activity => {
+    const type = activity.activity_type?.toLowerCase() || "";
+    if (type.includes("doctor") || type.includes("visit")) {
+      doctorVisitsCount++;
+    } else if (type.includes("pharmacy") || type.includes("call")) {
+      pharmacyCallsCount++;
+    } else if (type.includes("sample") || type.includes("distribution")) {
+      sampleDistributionCount++;
+    } else {
+      // Default to doctor visits for unknown types
+      doctorVisitsCount++;
+    }
+  });
   
   // Default quotas if none set
   const targets = {
@@ -113,10 +196,10 @@ async function loadProgressReporting(userId) {
     sample_distribution: quota?.sample_distribution_target || 20
   };
 
-  // Calculate progress (example distribution)
-  const doctorVisits = Math.min(completedVisits, targets.doctor_visits);
-  const pharmacyCalls = Math.min(Math.floor(completedVisits * 0.8), targets.pharmacy_calls);
-  const samples = Math.min(Math.floor(completedVisits * 2), targets.sample_distribution);
+  // Calculate progress
+  const doctorVisits = Math.min(doctorVisitsCount, targets.doctor_visits);
+  const pharmacyCalls = Math.min(pharmacyCallsCount, targets.pharmacy_calls);
+  const samples = Math.min(sampleDistributionCount, targets.sample_distribution);
 
   // Update progress HTML
   const progressHTML = `
@@ -187,15 +270,14 @@ function setupActivityForm(userId) {
       return;
     }
 
-    // Insert new visit/activity
+    // Insert new activity into activities table
     const { error } = await supabase
-      .from("visits")
+      .from("activities")
       .insert([
         {
           rep_id: userId,
-          scheduled_date: new Date().toISOString(),
-          status: "completed",
-          notes: details,
+          activity_type: activityType,
+          details: details,
           location: location
         }
       ]);
