@@ -42,13 +42,25 @@ async function loadRecentActivities(userId) {
     </div>
   `;
 
+  // Get fresh user session for the queries
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    activityFeedEl.innerHTML = `
+      <div class="activity-item">
+        <span class="activity-detail">Session expired. Please log in again.</span>
+      </div>
+    `;
+    return;
+  }
+  const currentUserId = session.user.id;
+
   // Query both tables in parallel
   const [activitiesResult, visitsResult] = await Promise.all([
     // Query activities table for user-logged activities
     supabase
       .from("activities")
       .select("id, activity_type, details, location, created_at")
-      .eq("rep_id", userId)
+      .eq("rep_id", currentUserId)
       .order("created_at", { ascending: false })
       .limit(10),
     
@@ -56,7 +68,7 @@ async function loadRecentActivities(userId) {
     supabase
       .from("visits")
       .select("id, scheduled_date, status, notes, doctors(name, specialty, clinic_location)")
-      .eq("rep_id", userId)
+      .eq("rep_id", currentUserId)
       .order("scheduled_date", { ascending: false })
       .limit(10)
   ]);
@@ -134,13 +146,21 @@ async function loadRecentActivities(userId) {
 
 // Fetch quota progress and update progress bars
 async function loadProgressReporting(userId) {
+  // Get fresh user session for the queries
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    console.error("Session expired in loadProgressReporting");
+    return;
+  }
+  const currentUserId = session.user.id;
+
   // Get current month's quota
   const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
   
   const { data: quota, error } = await supabase
     .from("quotas")
     .select("*")
-    .eq("rep_id", userId)
+    .eq("rep_id", currentUserId)
     .eq("month", currentMonth)
     .single();
 
@@ -162,7 +182,7 @@ async function loadProgressReporting(userId) {
   const { data: activities, error: activitiesError } = await supabase
     .from("activities")
     .select("activity_type")
-    .eq("rep_id", userId)
+    .eq("rep_id", currentUserId)
     .gte("created_at", startOfMonth.toISOString())
     .lte("created_at", endOfMonth.toISOString());
 
@@ -270,12 +290,19 @@ function setupActivityForm(userId) {
       return;
     }
 
+    // Get fresh user session for the insert
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      alert("Session expired. Please log in again.");
+      return;
+    }
+
     // Insert new activity into activities table
     const { error } = await supabase
       .from("activities")
       .insert([
         {
-          rep_id: userId,
+          rep_id: session.user.id,  // Use session.user.id directly, not the passed userId
           activity_type: activityType,
           details: details,
           location: location
@@ -284,7 +311,7 @@ function setupActivityForm(userId) {
 
     if (error) {
       console.error("Error logging activity:", error);
-      alert("Failed to log activity. Please try again.");
+      alert("Failed to log activity: " + error.message);
       return;
     }
 

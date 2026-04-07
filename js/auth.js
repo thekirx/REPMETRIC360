@@ -2,8 +2,8 @@
 import { supabase } from "./supabaseclient.js";
 
 export async function getSession() {
-  const { data } = await supabase.auth.getSession();
-  return data?.session ?? null;
+  const { data: { session } } = await supabase.auth.getSession();
+  return session ?? null;
 }
 
 // Show/hide admin navigation links based on user role
@@ -70,6 +70,12 @@ export async function getUserRole() {
       data: { role: data.role }
     });
     console.log("[getUserRole] Synced role to user_metadata:", data.role);
+    
+    // Force refresh the session to get updated JWT with role
+    const { data: refreshData } = await supabase.auth.refreshSession();
+    if (refreshData?.session) {
+      console.log("[getUserRole] Session refreshed with updated role");
+    }
   } catch (syncError) {
     console.error("[getUserRole] Failed to sync role to user_metadata:", syncError);
   }
