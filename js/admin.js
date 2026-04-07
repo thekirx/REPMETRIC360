@@ -97,6 +97,12 @@ async function initAdminDashboard() {
   const session = await requireAdmin();
   if (!session) return;
 
+  // Force a fresh session to ensure JWT has the synced role for RLS policies
+  const { data: refreshed } = await supabase.auth.refreshSession();
+  if (refreshed?.session) {
+    console.log("[initAdminDashboard] Session refreshed, role in JWT:", refreshed.session.user.user_metadata?.role);
+  }
+
   // Load all data
   await loadDashboardData();
 
@@ -915,6 +921,7 @@ async function loadRepList() {
   console.log("[loadRepList] Found", reps?.length || 0, "repmeds");
 
   if (!reps || reps.length === 0) {
+    console.warn("[loadRepList] No repmeds returned — this may be caused by RLS policy blocking the query. Check that admin role is in JWT user_metadata.");
     select.innerHTML = '<option value="" disabled>No RepMeds found</option>';
     return;
   }
