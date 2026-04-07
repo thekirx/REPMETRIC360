@@ -36,6 +36,61 @@ let allVisits = [];
 let allReports = [];
 let allSchedules = [];
 
+// Reusable state helpers
+function showCardLoading(container) {
+  if (!container) return;
+  container.innerHTML = `
+    <div class="state-loading">
+      <div class="skeleton skeleton-text" style="width: 60%"></div>
+      <div class="skeleton skeleton-text" style="width: 80%"></div>
+      <div class="skeleton skeleton-text" style="width: 40%"></div>
+    </div>
+  `;
+}
+
+function showCardError(container, message, retryFn) {
+  if (!container) return;
+  const retryId = 'retry-' + Math.random().toString(36).substr(2, 9);
+  container.innerHTML = `
+    <div class="state-error">
+      <span class="material-symbols-outlined state-icon">error_outline</span>
+      <p class="state-message">${message}</p>
+      <button class="btn-retry" id="${retryId}">Try Again</button>
+    </div>
+  `;
+  const retryBtn = document.getElementById(retryId);
+  if (retryBtn && retryFn) {
+    retryBtn.addEventListener('click', retryFn);
+  }
+}
+
+function showCardEmpty(container, message, ctaText, ctaHref) {
+  if (!container) return;
+  const ctaHtml = ctaText && ctaHref 
+    ? `<a href="${ctaHref}" class="btn-cta">${ctaText}</a>` 
+    : '';
+  container.innerHTML = `
+    <div class="state-empty">
+      <span class="material-symbols-outlined state-icon">inbox</span>
+      <p class="state-message">${message}</p>
+      ${ctaHtml}
+    </div>
+  `;
+}
+
+function showTableLoading(container, cols) {
+  if (!container) return;
+  let rows = '';
+  for (let i = 0; i < 3; i++) {
+    let cells = '';
+    for (let j = 0; j < cols; j++) {
+      cells += `<td><span class="skeleton skeleton-text" style="width: ${60 + Math.random() * 30}%"></span></td>`;
+    }
+    rows += `<tr>${cells}</tr>`;
+  }
+  container.innerHTML = rows;
+}
+
 // Initialize admin dashboard
 async function initAdminDashboard() {
   // Verify admin access
@@ -75,6 +130,21 @@ async function loadDashboardData() {
 
 // Load summary statistics
 async function loadSummaryStats() {
+  // Show loading skeletons at start
+  const statElements = [
+    elements.totalReps,
+    elements.activeReps,
+    elements.totalVisits,
+    elements.completedCalls,
+    elements.pendingReports,
+    elements.quotaAchievement,
+    elements.sampleDistribution,
+    elements.upcomingSchedules
+  ];
+  statElements.forEach(el => {
+    if (el) el.innerHTML = '<span class="skeleton skeleton-number"></span>';
+  });
+
   try {
     // Get total representatives (profiles with role = 'repmeds')
     const { data: reps, error: repsError } = await supabase
@@ -163,29 +233,36 @@ async function loadSummaryStats() {
 
     const upcomingCount = upcoming?.length || 0;
 
-    // Update DOM
-    updateElement(elements.totalReps, allRepresentatives.length);
-    updateElement(elements.activeReps, activeRepsCount);
-    updateElement(elements.totalVisits, allVisits.length);
-    updateElement(elements.completedCalls, completedVisits);
-    updateElement(elements.pendingReports, pendingReportsCount);
-    updateElement(elements.quotaAchievement, `${avgQuotaAchievement}%`);
-    updateElement(elements.sampleDistribution, totalSamples.toLocaleString());
-    updateElement(elements.upcomingSchedules, upcomingCount);
+    // Update DOM with actual values
+    if (elements.totalReps) elements.totalReps.textContent = allRepresentatives.length;
+    if (elements.activeReps) elements.activeReps.textContent = activeRepsCount;
+    if (elements.totalVisits) elements.totalVisits.textContent = allVisits.length;
+    if (elements.completedCalls) elements.completedCalls.textContent = completedVisits;
+    if (elements.pendingReports) elements.pendingReports.textContent = pendingReportsCount;
+    if (elements.quotaAchievement) elements.quotaAchievement.textContent = `${avgQuotaAchievement}%`;
+    if (elements.sampleDistribution) elements.sampleDistribution.textContent = totalSamples.toLocaleString();
+    if (elements.upcomingSchedules) elements.upcomingSchedules.textContent = upcomingCount;
 
   } catch (error) {
     console.error("Error loading summary stats:", error);
-    showErrorInStats();
+    // Show error state with tooltip
+    statElements.forEach(el => {
+      if (el) el.innerHTML = '<span class="stat-tooltip" data-tooltip="Data unavailable">--</span>';
+    });
   }
 }
 
 // Load representative monitoring data
 async function loadRepresentativeMonitoring() {
+  const repTableBody = elements.repMonitoringTable;
+  const tableContainer = repTableBody?.parentElement;
+  
+  // Show loading skeleton at start
+  showTableLoading(repTableBody, 6);
+
   try {
     if (allRepresentatives.length === 0) {
-      elements.repMonitoringTable.innerHTML = `
-        <tr><td colspan="6" class="empty-text">No representatives found</td></tr>
-      `;
+      showCardEmpty(tableContainer, "No representatives registered yet", "Register a RepMed", "register.html?admin=true");
       return;
     }
 
@@ -256,9 +333,7 @@ async function loadRepresentativeMonitoring() {
 
   } catch (error) {
     console.error("Error loading representative monitoring:", error);
-    elements.repMonitoringTable.innerHTML = `
-      <tr><td colspan="6" class="empty-text">Error loading data</td></tr>
-    `;
+    showCardError(tableContainer, "Could not load representatives", loadRepresentativeMonitoring);
   }
 }
 
@@ -359,24 +434,31 @@ async function loadPerformanceAnalytics() {
       : 0;
 
     // Render top performers
-    elements.topPerformers.innerHTML = topPerformers.length > 0 
-      ? topPerformers.map(p => `
+    const topPerformersContainer = elements.topPerformers;
+    const underperformersContainer = elements.underperformers;
+    
+    if (topPerformers.length > 0) {
+      topPerformersContainer.innerHTML = topPerformers.map(p => `
           <div class="performer-item">
             <span class="performer-name">${p.name}</span>
             <span class="performer-rate">${Math.round(p.rate * 100)}%</span>
           </div>
-        `).join("")
-      : '<div class="empty-text">No data available</div>';
+        `).join("");
+    } else {
+      showCardEmpty(topPerformersContainer, "No performance data for selected period");
+    }
 
     // Render underperformers
-    elements.underperformers.innerHTML = underperformers.length > 0
-      ? underperformers.map(p => `
+    if (underperformers.length > 0) {
+      underperformersContainer.innerHTML = underperformers.map(p => `
           <div class="performer-item underperformer">
             <span class="performer-name">${p.name}</span>
             <span class="performer-rate">${Math.round(p.rate * 100)}%</span>
           </div>
-        `).join("")
-      : '<div class="empty-text">No data available</div>';
+        `).join("");
+    } else {
+      showCardEmpty(underperformersContainer, "No performance data for selected period");
+    }
 
     // Update metrics
     updateElement(elements.visitCompletionRate, `${completionRate}%`);
@@ -384,13 +466,18 @@ async function loadPerformanceAnalytics() {
 
   } catch (error) {
     console.error("Error loading performance analytics:", error);
-    elements.topPerformers.innerHTML = '<div class="empty-text">Error loading data</div>';
-    elements.underperformers.innerHTML = '<div class="empty-text">Error loading data</div>';
+    showCardError(elements.topPerformers, "Could not load analytics data", loadPerformanceAnalytics);
+    showCardError(elements.underperformers, "Could not load analytics data", loadPerformanceAnalytics);
   }
 }
 
 // Load recent reports/activity feed
 async function loadRecentReports() {
+  const container = elements.recentReportsFeed;
+  
+  // Show loading skeleton at start
+  showCardLoading(container);
+
   try {
     const { data: reports, error } = await supabase
       .from("reports")
@@ -410,11 +497,7 @@ async function loadRecentReports() {
     if (error) throw error;
 
     if (!reports || reports.length === 0) {
-      elements.recentReportsFeed.innerHTML = `
-        <div class="activity-item">
-          <span class="activity-detail">No recent reports</span>
-        </div>
-      `;
+      showCardEmpty(container, "No field reports submitted yet");
       return;
     }
 
@@ -443,11 +526,7 @@ async function loadRecentReports() {
 
   } catch (error) {
     console.error("Error loading recent reports:", error);
-    elements.recentReportsFeed.innerHTML = `
-      <div class="activity-item">
-        <span class="activity-detail">Error loading reports</span>
-      </div>
-    `;
+    showCardError(container, "Could not load field reports", loadRecentReports);
   }
 }
 
@@ -480,9 +559,10 @@ async function loadScheduleOverview() {
     const completed = appointments?.filter(a => a.status === "completed").length || 0;
     const missed = appointments?.filter(a => a.status === "missed").length || 0;
 
-    updateElement(elements.todayAppointments, total);
-    updateElement(elements.missedAppointments, missed);
-    updateElement(elements.completedAppointments, completed);
+    // Use 0 for valid empty state (no appointments), not "--"
+    if (elements.todayAppointments) elements.todayAppointments.textContent = total;
+    if (elements.missedAppointments) elements.missedAppointments.textContent = missed;
+    if (elements.completedAppointments) elements.completedAppointments.textContent = completed;
 
     // Render upcoming schedules
     const upcoming = appointments?.filter(a => 
@@ -512,14 +592,17 @@ async function loadScheduleOverview() {
         }).join("")}
       `;
     } else {
-      elements.upcomingSchedulesList.innerHTML = `
-        <h4>Upcoming Today</h4>
-        <div class="empty-text">No upcoming appointments</div>
-      `;
+      showCardEmpty(elements.upcomingSchedulesList, "No appointments scheduled for today");
     }
 
   } catch (error) {
     console.error("Error loading schedule overview:", error);
+    // Show error state with retry button
+    showCardError(elements.upcomingSchedulesList, "Could not load schedule data", loadScheduleOverview);
+    // Show "--" with tooltip for stats on error
+    if (elements.todayAppointments) elements.todayAppointments.innerHTML = '<span class="stat-tooltip" data-tooltip="Data unavailable">--</span>';
+    if (elements.missedAppointments) elements.missedAppointments.innerHTML = '<span class="stat-tooltip" data-tooltip="Data unavailable">--</span>';
+    if (elements.completedAppointments) elements.completedAppointments.innerHTML = '<span class="stat-tooltip" data-tooltip="Data unavailable">--</span>';
   }
 }
 
@@ -536,9 +619,7 @@ async function loadQuotaTracking() {
     if (error) throw error;
 
     if (!quotas || quotas.length === 0) {
-      elements.quotaTrackingList.innerHTML = `
-        <div class="empty-text">No quota data for this month</div>
-      `;
+      showCardEmpty(elements.quotaTrackingList, "No quotas set for this month");
       return;
     }
 
@@ -613,6 +694,7 @@ async function loadQuotaTracking() {
 
   } catch (error) {
     console.error("Error loading quota tracking:", error);
+    showCardError(elements.quotaTrackingList, "Could not load quota data", loadQuotaTracking);
   }
 }
 
@@ -685,6 +767,20 @@ async function loadAlerts() {
         </div>
       </div>
     `).join("");
+
+    // Add timestamp after alerts load
+    const alertsHeader = elements.alertsList.parentElement?.querySelector('h3, .card-header, .section-title');
+    if (alertsHeader) {
+      // Remove existing timestamp if any
+      const existingTimestamp = alertsHeader.parentElement?.querySelector('.alert-timestamp');
+      if (existingTimestamp) existingTimestamp.remove();
+      
+      // Add new timestamp
+      const timestamp = document.createElement('span');
+      timestamp.className = 'alert-timestamp';
+      timestamp.textContent = 'Last checked: just now';
+      alertsHeader.appendChild(timestamp);
+    }
 
   } catch (error) {
     console.error("Error loading alerts:", error);
