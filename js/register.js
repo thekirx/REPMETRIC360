@@ -46,21 +46,21 @@ document.querySelector("#registerForm").addEventListener("submit", async (e) => 
     return;
   }
 
-  // Gumawa ng profile record pagkatapos mag-sign up
+  // Gumawa ng profile record pagkatapos mag-sign up (upsert to avoid conflict with trigger)
   if (data.user) {
     const { error: profileError } = await supabase
       .from("profiles")
-      .insert([
+      .upsert([
         {
           id: data.user.id,
           full_name: fullName,
           email: email,
           role: role
         }
-      ]);
+      ], { onConflict: 'id' });
     
     if (profileError) {
-      console.error("Error creating profile:", profileError);
+      console.error("Profile creation error:", profileError);
     }
   }
 

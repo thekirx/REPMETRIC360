@@ -23,7 +23,8 @@ CREATE POLICY "Users can view own profile"
 CREATE POLICY "Users can update own profile"
   ON profiles FOR UPDATE
   TO authenticated
-  USING (id = auth.uid());
+  USING (id = auth.uid())
+  WITH CHECK (id = auth.uid());
 
 -- Admin can view all profiles
 CREATE POLICY "Admin can view all profiles"
