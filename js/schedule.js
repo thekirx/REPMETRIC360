@@ -21,8 +21,9 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
 
 // Initialize schedule page
 async function initSchedule() {
-  const user = await requireAuth();
-  if (!user) return;
+  const session = await requireAuth();
+  if (!session) return;
+  const userId = session.user.id;
 
   // Update admin nav visibility
   await updateAdminNav();
@@ -35,7 +36,7 @@ async function initSchedule() {
   setupCalendar();
   
   // Load appointments for selected date
-  await loadAppointments(user.id, selectedDate);
+  await loadAppointments(userId, selectedDate);
 }
 
 // Generate calendar grid dynamically based on year and month
